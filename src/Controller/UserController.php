@@ -16,7 +16,7 @@ final class UserController extends AbstractController
         return $this->render('user/index.html.twig');
     }
 
-    #[Route(path: '/connexion', name: 'app_login')]
+    #[Route(path: '/connexion', name: '_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // get the login error if there is one
