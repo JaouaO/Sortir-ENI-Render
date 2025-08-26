@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Form\EventType;
+use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,37 +37,20 @@ final class EventController extends AbstractController
             'mode' => 'create'
         ]);
     }
-    #[Route('/{id}/modifier', name: '_edit', requirements: ['id' => '\d+'])]
-    public function edit(Event $event, Request $request, EntityManagerInterface $em): Response
+    #[Route('/{id}/modifier', name: '_edit')]
+    public function edit(int $id): Response
     {
-
-        $form = $this->createForm(EventType::class, $event);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em->flush();
-
-            $this->addFlash('success', 'Une sortie à été modifiée avec succès');
-
-            return $this->redirectToRoute('home');
-           #return $this->render('event_display',['id' => $event->getId()]);
-        }
-
-
-        return $this->render('event/edit.html.twig',[
-            'event_form' => $form,
-            'mode' => 'edit'
-        ]);
+        return $this->render('event/edit.html.twig',['id' => $id]);
     }
     #[Route('/{id}/annuler', name: '_cancel')]
     public function cancel(int $id): Response
     {
         return $this->render('event/cancel.html.twig',['id' => $id]);
     }
+
     #[Route('/{id}', name: '_display')]
-    public function display(int $id): Response
+    public function display(Event $event): Response
     {
-        return $this->render('event/display.html.twig',['id' => $id]);
+        return $this->render('event/display.html.twig',['event' => $event]);
     }
 }
