@@ -14,20 +14,48 @@
 
     </head>
     <body>
-    <nav>
-        <ul>
-            <li><a href="{{ path('event_create') }}">Créer une sortie</a></li>
-            <li><a href="{{ path('event_display', {'id' : 15}) }}">Afficher une sortie (10)</a></li>
-            <li><a href="{{ path('event_edit',  {'id' : 15}) }}">Modifier une sortie</a></li>
-            <li><a href="{{ path('event_cancel',  {'id' : 15}) }}">Annuler une sortie</a></li>
-            <li><a href="{{ path('manager_cities') }}">Gérer les villes</a></li>
-            <li><a href="{{ path('manager_places') }}">gérer les sites</a></li>
-            <li><a href="{{ path('home') }}">Accueil</a></li>
-            <li><a href="{{ path('user_login') }}">Connexion</a></li>
-            <li><a href="{{ path('user_register') }}">Inscription</a></li>
-
-        </ul>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <span class="sortir-logo"><i class="bi bi-geo-alt-fill"></i> Sortir.com</span>
+            </a>
+            <button class="navbar-toggler" type="button" style="display: none;">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('event_create') }}">Créer une sortie</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('event_display', {'id' : 15}) }}"> Afficher une sortie</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('event_edit', {'id' : 15}) }}">Modifier une sortie</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('event_cancel', {'id' : 15}) }}">Annuler une sortie</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('manager_cities') }}">Gérer les villes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('manager_places') }}"> Gérer les sites</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('home') }}">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('user_login') }}"> Connexion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('user_register') }}"> Inscription</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
+    
 
 
 

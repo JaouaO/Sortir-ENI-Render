@@ -1,3 +1,19 @@
 body {
-    background-color: skyblue;
+    padding: 20px;
+}
+.event-info dt {
+    font-weight: bold;
+}
+.event-info dd {
+    margin-bottom: 10px;
+}
+.participants-table {
+    max-width: 500px;
+}
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+.sortir-logo {
+    color: #4e73df;
 }
