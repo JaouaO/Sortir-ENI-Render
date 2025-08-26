@@ -33,22 +33,22 @@
             <div class="col-md-6">
                 <dl class="row event-info">
                     <dt class="col-sm-5">Ville organisatrice :</dt>
-                    <dd class="col-sm-7">TEST</dd>
+                    <dd class="col-sm-7">{{ event.place.city.name }}</dd>
 
                     <dt class="col-sm-5">Lieu :</dt>
-                    <dd class="col-sm-7">TEST</dd>
+                    <dd class="col-sm-7">{{ event.site.name }}</dd>
 
                     <dt class="col-sm-5">Rue :</dt>
-                    <dd class="col-sm-7">TEST</dd>
+                    <dd class="col-sm-7">{{ event.place.name }}</dd>
 
                     <dt class="col-sm-5">Code postal :</dt>
-                    <dd class="col-sm-7">TEST</dd>
+                    <dd class="col-sm-7">{{ event.place.city.postCode }}</dd>
 
                     <dt class="col-sm-5">Latitude :</dt>
-                    <dd class="col-sm-7">TEST</dd>
+                    <dd class="col-sm-7">{{ event.place.latitude}}</dd>
 
                     <dt class="col-sm-5">Longitude :</dt>
-                    <dd class="col-sm-7">TEST</dd>
+                    <dd class="col-sm-7">{{ event.place.longitude}}</dd>
                 </dl>
             </div>
         </div>
