@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\This;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -52,9 +53,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $phone = null;
 
     #[ORM\Column]
-    private ?string $attachedCity = null;
-
-    #[ORM\Column]
     private ?bool $isAdmin = null;
 
     #[ORM\Column]
@@ -64,6 +62,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var Collection<int, Event>
      */
     #[ORM\ManyToMany(targetEntity: Event::class, inversedBy: 'registeredParticipants')]
+    #[ORM\JoinColumn(nullable:false, onDelete: "CASCADE")]
     private Collection $registeredEvents;
 
     /**
@@ -71,6 +70,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'organizer')]
     private Collection $organizedEvents;
+
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable:false, onDelete: "CASCADE")]
+    private ?Site $site = null;
 
     public function __construct()
     {
@@ -84,22 +87,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->name;
     }
 
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+        return $this;
+    }
+
     public function getPseudo(): ?string{
         return $this->pseudo;
+    }
+    public function setPseudo(string $pseudo): static
+    {
+        $this->pseudo = $pseudo;
+        return $this;
     }
 
     public function getFirstName(): ?string{
         return $this->firstName;
     }
 
+    public function setFirstName(string $firstName): static
+    {
+        $this->firstName = $firstName;
+        return $this;
+    }
+
     public function getPhone(): ?string{
         return $this->phone;
     }
 
-    public function getAttachedCity(): ?string{
-        return $this->attachedCity;
+    public function setPhone(string $phone): static
+    {
+        $this->phone = $phone;
+        return $this;
     }
-
 
 
     public function getId(): ?int
@@ -258,6 +279,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $organizedEvent->setOrganizer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSite(): ?Site
+    {
+        return $this->site;
+    }
+
+    public function setSite(?Site $site): static
+    {
+        $this->site = $site;
 
         return $this;
     }

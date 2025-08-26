@@ -5,7 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Place;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use App\Entity\Participant;
+use App\Entity\User;
 use App\Entity\Site;
 use App\Entity\Event;
 use App\Entity\State;
@@ -59,21 +59,22 @@ $places=[];
             }
 
 
-        $participants = [];
+        $users = [];
         for ($i = 0; $i < 10; $i++) {
-            $participant = new Participant();
-            $participant->setName($faker->lastName);
-            $participant->setFirstName($faker->firstName);
-            $participant->setPhone($faker->phoneNumber);
-            $participant->setMail($faker->email);
-            $participant->setIsAdmin(false);
-            $participant->setIsActive(true);
-            $participant->setSite($faker->randomElement($sites));
-            $participant->setPassword($faker->password);
+            $user = new User();
+            $user->setName($faker->lastName);
+            $user->setFirstName($faker->firstName);
+            $user->setPseudo($faker->name);
+            $user->setPhone($faker->phoneNumber);
+            $user->setEmail($faker->email);
+            $user->setIsAdmin(false);
+            $user->setIsActive(true);
+            $user->setSite($faker->randomElement($sites));
+            $user->setPassword($faker->password);
 
 
-            $manager->persist($participant);
-            $participants[] = $participant;
+            $manager->persist($user);
+            $users[] = $user;
         }
 
 
@@ -90,11 +91,11 @@ $places=[];
             $event->setState($faker->randomElement($states));
             $event->setPlace($faker->randomElement($places));
             $event->setSite($faker->randomElement($sites));
-            $organizer = $faker->randomElement($participants);
+            $organizer = $faker->randomElement($users);
             $event->setOrganizer($organizer);
 
 
-            foreach ($faker->randomElements($participants, $faker->numberBetween(2, 6)) as $registered) {
+            foreach ($faker->randomElements($users, $faker->numberBetween(2, 6)) as $registered) {
                 $event->addRegisteredParticipant($registered);
             }
 

@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Event;
-use App\Entity\Participant;
+use App\Entity\User;
 use App\Entity\Place;
 use App\Entity\Site;
 use App\Entity\State;
@@ -37,12 +37,12 @@ class EventType extends AbstractType
                 'choice_label' => 'name',
             ])
             ->add('registeredParticipants', EntityType::class, [
-                'class' => Participant::class,
+                'class' => User::class,
                 'choice_label' => 'name',
                 'multiple' => true,
             ])
             ->add('organizer', EntityType::class, [
-                'class' => Participant::class,
+                'class' => User::class,
                 'choice_label' => 'name',
             ])
             ->add('submit', SubmitType::class)
