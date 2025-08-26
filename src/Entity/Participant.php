@@ -38,13 +38,14 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private ?bool $isActive = false;
 
     #[ORM\ManyToOne(inversedBy: 'participants')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable:false, onDelete: "CASCADE")]
     private ?Site $site = null;
 
     /**
      * @var Collection<int, event>
      */
     #[ORM\ManyToMany(targetEntity: event::class, inversedBy: 'registeredParticipants')]
+    #[ORM\JoinColumn(nullable:false, onDelete: "CASCADE")]
     private Collection $events;
 
     /**

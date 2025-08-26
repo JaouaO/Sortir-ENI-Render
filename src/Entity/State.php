@@ -23,6 +23,7 @@ class State
      * @var Collection<int, Event>
      */
     #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'state')]
+
     private Collection $events;
 
     public function __construct()
