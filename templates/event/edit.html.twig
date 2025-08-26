@@ -5,7 +5,16 @@
 {% block body %}
     <h1>Page de modification de sortie</h1>
 
-
+    {%  if mode == 'create' %}
+        <h1>Créer une nouvelle sortie</h1>
+    {% else %}
+        <h1>Mettre à jour la sortie</h1>
+    {% endif %}
+    <div class="row justify-content-center">
+        <div class="col-6">
+            {{ form(event_form) }}
+        </div>
+    </div>
 
 
 {% endblock %}
