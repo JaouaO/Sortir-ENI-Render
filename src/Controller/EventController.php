@@ -36,10 +36,28 @@ final class EventController extends AbstractController
             'mode' => 'create'
         ]);
     }
-    #[Route('/{id}/modifier', name: '_edit')]
-    public function edit(int $id): Response
+    #[Route('/{id}/modifier', name: '_edit', requirements: ['id' => '\d+'])]
+    public function edit(Event $event, Request $request, EntityManagerInterface $em): Response
     {
-        return $this->render('event/edit.html.twig',['id' => $id]);
+
+        $form = $this->createForm(EventType::class, $event);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+
+            $this->addFlash('success', 'Une sortie à été modifiée avec succès');
+
+            return $this->redirectToRoute('home');
+           #return $this->render('event_display',['id' => $event->getId()]);
+        }
+
+
+        return $this->render('event/edit.html.twig',[
+            'event_form' => $form,
+            'mode' => 'edit'
+        ]);
     }
     #[Route('/{id}/annuler', name: '_cancel')]
     public function cancel(int $id): Response
