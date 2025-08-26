@@ -2,16 +2,30 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}Welcome World ! La dream team du fond 2 est présente{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
         {% endblock %}
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
+
     </head>
     <body>
+    <nav>
+        <ul>
+            <li><a href="{{ path('event_create') }}">Créer une sortie</a></li>
+            <li><a href="{{ path('event_display', {'id' : 10}) }}">Afficher une sortie (10)</a></li>
+            <li><a href="{{ path('event_edit',  {'id' : 10}) }}">Modifier une sortie</a></li>
+            <li><a href="{{ path('event_cancel',  {'id' : 10}) }}">Annuler une sortie</a></li>
+            <li><a href="{{ path('manager_cities') }}">Gérer les villes</a></li>
+            <li><a href="{{ path('manager_places') }}">gérer les sites</a></li>
+            <li><a href="{{ path('home') }}">Accueil</a></li>
+            <li><a href="{{ path('user_login') }}">Connexion</a></li>
+        </ul>
+    </nav>
+
+
+
+
         {% block body %}{% endblock %}
     </body>
 </html>
