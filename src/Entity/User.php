@@ -62,6 +62,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var Collection<int, Event>
      */
     #[ORM\ManyToMany(targetEntity: Event::class, inversedBy: 'registeredParticipants')]
+    #[ORM\JoinColumn(nullable:false, onDelete: "CASCADE")]
     private Collection $registeredEvents;
 
     /**
@@ -71,7 +72,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $organizedEvents;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable:false, onDelete: "CASCADE")]
     private ?Site $site = null;
 
     public function __construct()
