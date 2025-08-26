@@ -16,6 +16,25 @@ class CityRepository extends ServiceEntityRepository
         parent::__construct($registry, City::class);
     }
 
+    public function findCities(?string $searchTerm): array
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        // expr() permet de générer des requètes tel que LIKE, AND, OR, BETWEEN
+        if ($searchTerm) {
+            if ($searchTerm) {
+                $qb->where($qb->expr()->like('c.name', ':term'))
+                    ->orWhere($qb->expr()->like('c.postCode', ':term'))
+                    ->setParameter('term', '%' . $searchTerm . '%');
+            }
+        }
+        return $qb->getQuery()->getResult();
+    }
+
+
+
+
+
     //    /**
     //     * @return City[] Returns an array of City objects
     //     */

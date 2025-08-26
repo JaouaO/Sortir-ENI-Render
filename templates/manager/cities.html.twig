@@ -5,4 +5,18 @@
 {% block body %}
     <h1>Gestion des villes</h1>
 
+    <h3>Filtrer les villes</h3>
+    <form method="get" action="{{ path('manager_cities') }}">
+        <label for="rechercher">Trouver une ville</label>
+        <input type="text" id="search" name="search">
+        <button type="submit">Rechercher</button>
+    </form>
+
+    {% for city in cities %}
+        <ul>
+            <li>{{ city.name }} - {{ city.postCode }}</li>
+        </ul>
+
+    {% endfor %}
+
 {% endblock %}
