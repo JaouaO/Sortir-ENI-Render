@@ -1,0 +1,214 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\EventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: EventRepository::class)]
+class Event
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 200)]
+    private ?string $name = null;
+
+    #[ORM\Column]
+    private ?\DateTime $startDateTime = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $duration = null;
+
+    #[ORM\Column]
+    private ?\DateTime $registrationDeadline = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $maxParticipants = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $evenInfo = null;
+
+    #[ORM\ManyToOne(inversedBy: 'event')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?State $state = null;
+
+    #[ORM\ManyToOne(inversedBy: 'event')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Site $site = null;
+
+    #[ORM\ManyToOne(inversedBy: 'events')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Place $place = null;
+
+    /**
+     * @var Collection<int, Participant>
+     */
+    #[ORM\ManyToMany(targetEntity: Participant::class, mappedBy: 'events')]
+    private Collection $registeredParticipants;
+
+    #[ORM\ManyToOne(inversedBy: 'organizedEvents')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Participant $organizer = null;
+
+    public function __construct()
+    {
+        $this->registeredParticipants = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getStartDateTime(): ?\DateTime
+    {
+        return $this->startDateTime;
+    }
+
+    public function setStartDateTime(\DateTime $startDateTime): static
+    {
+        $this->startDateTime = $startDateTime;
+
+        return $this;
+    }
+
+    public function getDuration(): ?int
+    {
+        return $this->duration;
+    }
+
+    public function setDuration(?int $duration): static
+    {
+        $this->duration = $duration;
+
+        return $this;
+    }
+
+    public function getRegistrationDeadline(): ?\DateTime
+    {
+        return $this->registrationDeadline;
+    }
+
+    public function setRegistrationDeadline(\DateTime $registrationDeadline): static
+    {
+        $this->registrationDeadline = $registrationDeadline;
+
+        return $this;
+    }
+
+    public function getMaxParticipants(): ?int
+    {
+        return $this->maxParticipants;
+    }
+
+    public function setMaxParticipants(?int $maxParticipants): static
+    {
+        $this->maxParticipants = $maxParticipants;
+
+        return $this;
+    }
+
+    public function getEvenInfo(): ?string
+    {
+        return $this->evenInfo;
+    }
+
+    public function setEvenInfo(?string $evenInfo): static
+    {
+        $this->evenInfo = $evenInfo;
+
+        return $this;
+    }
+
+    public function getState(): ?State
+    {
+        return $this->state;
+    }
+
+    public function setState(?State $state): static
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    public function getSite(): ?Site
+    {
+        return $this->site;
+    }
+
+    public function setSite(?Site $site): static
+    {
+        $this->site = $site;
+
+        return $this;
+    }
+
+    public function getPlace(): ?Place
+    {
+        return $this->place;
+    }
+
+    public function setPlace(?Place $place): static
+    {
+        $this->place = $place;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Participant>
+     */
+    public function getRegisteredParticipants(): Collection
+    {
+        return $this->registeredParticipants;
+    }
+
+    public function addRegisteredParticipant(Participant $registeredParticipant): static
+    {
+        if (!$this->registeredParticipants->contains($registeredParticipant)) {
+            $this->registeredParticipants->add($registeredParticipant);
+            $registeredParticipant->addEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRegisteredParticipant(Participant $registeredParticipant): static
+    {
+        if ($this->registeredParticipants->removeElement($registeredParticipant)) {
+            $registeredParticipant->removeEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function getOrganizer(): ?Participant
+    {
+        return $this->organizer;
+    }
+
+    public function setOrganizer(?Participant $organizer): static
+    {
+        $this->organizer = $organizer;
+
+        return $this;
+    }
+}
