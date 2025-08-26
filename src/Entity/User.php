@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -51,6 +53,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?string $attachedCity = null;
+
+    #[ORM\Column]
+    private ?bool $isAdmin = null;
+
+    #[ORM\Column]
+    private ?bool $isActive = null;
+
+    /**
+     * @var Collection<int, Event>
+     */
+    #[ORM\ManyToMany(targetEntity: Event::class, inversedBy: 'registeredParticipants')]
+    private Collection $registeredEvents;
+
+    /**
+     * @var Collection<int, Event>
+     */
+    #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'organizer')]
+    private Collection $organizedEvents;
+
+    public function __construct()
+    {
+        $this->registeredEvents = new ArrayCollection();
+        $this->organizedEvents = new ArrayCollection();
+    }
 
 
 
@@ -154,6 +180,84 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function isAdmin(): ?bool
+    {
+        return $this->isAdmin;
+    }
+
+    public function setIsAdmin(bool $isAdmin): static
+    {
+        $this->isAdmin = $isAdmin;
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): static
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Event>
+     */
+    public function getRegisteredEvents(): Collection
+    {
+        return $this->registeredEvents;
+    }
+
+    public function addRegisteredEvent(Event $registeredEvent): static
+    {
+        if (!$this->registeredEvents->contains($registeredEvent)) {
+            $this->registeredEvents->add($registeredEvent);
+        }
+
+        return $this;
+    }
+
+    public function removeRegisteredEvent(Event $registeredEvent): static
+    {
+        $this->registeredEvents->removeElement($registeredEvent);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Event>
+     */
+    public function getOrganizedEvents(): Collection
+    {
+        return $this->organizedEvents;
+    }
+
+    public function addOrganizedEvent(Event $organizedEvent): static
+    {
+        if (!$this->organizedEvents->contains($organizedEvent)) {
+            $this->organizedEvents->add($organizedEvent);
+            $organizedEvent->setOrganizer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrganizedEvent(Event $organizedEvent): static
+    {
+        if ($this->organizedEvents->removeElement($organizedEvent)) {
+            // set the owning side to null (unless already changed)
+            if ($organizedEvent->getOrganizer() === $this) {
+                $organizedEvent->setOrganizer(null);
+            }
+        }
 
         return $this;
     }
