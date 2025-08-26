@@ -65,8 +65,8 @@ final class EventController extends AbstractController
         return $this->render('event/cancel.html.twig',['id' => $id]);
     }
     #[Route('/{id}', name: '_display')]
-    public function display(int $id): Response
+    public function display(Event $event): Response
     {
-        return $this->render('event/display.html.twig',['id' => $id]);
+        return $this->render('event/display.html.twig',['event' => $event]);
     }
 }
