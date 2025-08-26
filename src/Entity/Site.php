@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SiteRepository;
+use App\Entity\Event;
+use App\Entity\Participant;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,20 +21,20 @@ class Site
     private ?string $name = null;
 
     /**
-     * @var Collection<int, event>
+     * @var Collection<int, Event>
      */
-    #[ORM\OneToMany(targetEntity: event::class, mappedBy: 'site')]
-    private Collection $event;
+    #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'site')]
+    private Collection $events;
 
     /**
-     * @var Collection<int, participant>
+     * @var Collection<int, Participant>
      */
-    #[ORM\OneToMany(targetEntity: participant::class, mappedBy: 'site')]
+    #[ORM\OneToMany(targetEntity: Participant::class, mappedBy: 'site')]
     private Collection $participants;
 
     public function __construct()
     {
-        $this->event = new ArrayCollection();
+        $this->events = new ArrayCollection();
         $this->participants = new ArrayCollection();
     }
 
@@ -54,26 +56,26 @@ class Site
     }
 
     /**
-     * @return Collection<int, event>
+     * @return Collection<int, Event>
      */
-    public function getEvent(): Collection
+    public function getEvents(): Collection
     {
-        return $this->event;
+        return $this->events;
     }
 
-    public function addEvent(event $event): static
+    public function addEvent(Event $event): static
     {
-        if (!$this->event->contains($event)) {
-            $this->event->add($event);
+        if (!$this->events->contains($event)) {
+            $this->events->add($event);
             $event->setSite($this);
         }
 
         return $this;
     }
 
-    public function removeEvent(event $event): static
+    public function removeEvent(Event $event): static
     {
-        if ($this->event->removeElement($event)) {
+        if ($this->events->removeElement($event)) {
             // set the owning side to null (unless already changed)
             if ($event->getSite() === $this) {
                 $event->setSite(null);
@@ -84,14 +86,14 @@ class Site
     }
 
     /**
-     * @return Collection<int, participant>
+     * @return Collection<int, Participant>
      */
     public function getParticipants(): Collection
     {
         return $this->participants;
     }
 
-    public function addParticipant(participant $participant): static
+    public function addParticipant(Participant $participant): static
     {
         if (!$this->participants->contains($participant)) {
             $this->participants->add($participant);
@@ -101,7 +103,7 @@ class Site
         return $this;
     }
 
-    public function removeParticipant(participant $participant): static
+    public function removeParticipant(Participant $participant): static
     {
         if ($this->participants->removeElement($participant)) {
             // set the owning side to null (unless already changed)

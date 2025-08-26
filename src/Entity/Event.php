@@ -31,7 +31,7 @@ class Event
     private ?int $maxParticipants = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $evenInfo = null;
+    private ?string $eventInfo = null;
 
     #[ORM\ManyToOne(inversedBy: 'event')]
     #[ORM\JoinColumn(nullable: false)]
@@ -125,14 +125,14 @@ class Event
         return $this;
     }
 
-    public function getEvenInfo(): ?string
+    public function getEventInfo(): ?string
     {
-        return $this->evenInfo;
+        return $this->eventInfo;
     }
 
-    public function setEvenInfo(?string $evenInfo): static
+    public function setEventInfo(?string $eventInfo): static
     {
-        $this->evenInfo = $evenInfo;
+        $this->eventInfo = $eventInfo;
 
         return $this;
     }

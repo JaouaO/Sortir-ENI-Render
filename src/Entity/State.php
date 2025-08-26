@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\StateRepository;
+use App\Entity\Event;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,14 +20,14 @@ class State
     private ?string $description = null;
 
     /**
-     * @var Collection<int, event>
+     * @var Collection<int, Event>
      */
-    #[ORM\OneToMany(targetEntity: event::class, mappedBy: 'state')]
-    private Collection $event;
+    #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'state')]
+    private Collection $events;
 
     public function __construct()
     {
-        $this->event = new ArrayCollection();
+        $this->events = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -47,26 +48,26 @@ class State
     }
 
     /**
-     * @return Collection<int, event>
+     * @return Collection<int, Event>
      */
-    public function getEvent(): Collection
+    public function getEvents(): Collection
     {
-        return $this->event;
+        return $this->events;
     }
 
-    public function addEvent(event $event): static
+    public function addEvent(Event $event): static
     {
-        if (!$this->event->contains($event)) {
-            $this->event->add($event);
+        if (!$this->events->contains($event)) {
+            $this->events->add($event);
             $event->setState($this);
         }
 
         return $this;
     }
 
-    public function removeEvent(event $event): static
+    public function removeEvent(Event $event): static
     {
-        if ($this->event->removeElement($event)) {
+        if ($this->events->removeElement($event)) {
             // set the owning side to null (unless already changed)
             if ($event->getState() === $this) {
                 $event->setState(null);
