@@ -9,6 +9,14 @@ body {
 }
 .participants-table {
     max-width: 500px;
+    max-height: 250px;
+    overflow-y: auto;
+    thead th {
+        position: sticky;
+        top: 0;
+        background: white;
+        z-index: 2;
+    }
 }
 .navbar-brand {
     font-weight: bold;
