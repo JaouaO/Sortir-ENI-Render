@@ -136,7 +136,8 @@
                                 {{ event.registrationDeadline | date("d/m/Y H:i") }}
                             </td>
                             <td>
-                                {{ inscriptionCount[event.id] }} / {{ event.maxParticipant }}
+                                <span>Etat de l'évènnement</span>
+                                {# {{ inscriptionCount[event.id] }} / {{ event.maxParticipant }}#}
                             </td>
                             <td>
                                 <span>Etat de l'évènnement</span>
@@ -148,8 +149,8 @@
                                 <span>Organisateur</span>
                             </td>
                             <td>
-                                <a href="{{ path('_display', {id: event.id}) }}">Afficher</a>
-                                <a href="{{ path('_edit', {id: event.id}) }}">Modifier</a>
+                               {#  <a href="{{ path('_display', {id: event.id}) }}">Afficher</a>
+                                <a href="{{ path('_edit', {id: event.id}) }}">Modifier</a>#}
                             </td>
                         </tr>
                     {% endfor %}
