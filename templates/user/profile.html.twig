@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+    <h1>Affichage du profil de {{ user.pseudo }}</h1>
+
+    <p>Prénom : {{ user.firstName }}</p>
+    <p>Nom : {{ user.name }}</p>
+    <p>Téléphone : {{ user.phone }}</p>
+    <p>Email : {{ user.email }}</p>
+    <p>Ville de rattachement  : {{ user.site }}</p>
+
+
+    {% if user.poster %}
+        <img src="{{ asset('uploads/photos/' ~ user.poster) }}" alt="Photo de profil" width="150">
+    {% endif %}
+
+    {#<a href="{{ path('user_edit_profile') }}">Modifier mon profil</a> #}
+    <button type="submit" class="btn">Retour</button>
+
+{% endblock %}
+
+
+
+

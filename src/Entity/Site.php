@@ -112,4 +112,11 @@ class Site
 
         return $this;
     }
+    // to string pour que le string soit accépté dan sle menu déroulant
+    public function __toString():string {
+        return $this->name ?? '';
+    }
+
+    
+
 }

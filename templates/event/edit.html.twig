@@ -3,18 +3,29 @@
 {% block title %}Sortie{% endblock %}
 
 {% block body %}
-    <h1>Page de modification de sortie</h1>
+    <div class="container mt-4">
+        {% if mode == 'create' %}
+            <h1 class="mb-4">Créer une nouvelle sortie</h1>
+        {% else %}
+            <h1 class="mb-4">Mettre à jour la sortie</h1>
+        {% endif %}
 
-    {%  if mode == 'create' %}
-        <h1>Créer une nouvelle sortie</h1>
-    {% else %}
-        <h1>Mettre à jour la sortie</h1>
-    {% endif %}
-    <div class="row justify-content-center">
-        <div class="col-6">
-            {{ form(event_form) }}
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                {{ form_start(event_form, { 'attr': { 'class': 'needs-validation' } }) }}
+
+                <div class="card shadow-sm p-4">
+                    {{ form_widget(event_form) }}
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            {{ mode == 'create' ? 'Créer' : 'Mettre à jour' }}
+                        </button>
+                    </div>
+                </div>
+
+                {{ form_end(event_form) }}
+            </div>
         </div>
     </div>
-
-
 {% endblock %}

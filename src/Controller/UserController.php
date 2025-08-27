@@ -4,10 +4,13 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Helper\FileUploader;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
@@ -52,7 +55,7 @@ final class UserController extends AbstractController
     }
 
     #[Route('/register', name: '_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, ParameterBagInterface $parameterBag, FileUploader $fileUploader): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -61,25 +64,33 @@ final class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
-
-            // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+
+            $file = $form->get('poster_file')->getData();
+            if ($file instanceof UploadedFile) {
+                $fileName = $fileUploader->upload(
+                    $file,
+                    $user->getPseudo(), // ou $user->getEmail(), ou même juste "profile"
+                    $parameterBag->get('photo')['photo_profile']
+                );
+                $user->setPoster($fileName);
+            }
 
             $entityManager->persist($user);
             $entityManager->flush();
 
             // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            $this->emailVerifier->sendEmailConfirmation('user_verify_email', $user,
                 (new TemplatedEmail())
                     ->from(new Address('test@sortie.com', 'Sortie Mail Bot'))
-                    ->to((string) $user->getEmail())
+                    ->to((string)$user->getEmail())
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
 
             // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('user_profile', ['id' => $user->getId()]);
         }
 
         return $this->render('registration/register.html.twig', [
@@ -87,7 +98,7 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/verify/email', name: 'app_verify_email')]
+    #[Route('/verify/email', name: '_verify_email')]
     public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -100,7 +111,9 @@ final class UserController extends AbstractController
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
 
-            return $this->redirectToRoute('user_register');
+            return $this->redirectToRoute('user_profile', [
+                'id' => $user->getId(),
+            ]);
         }
 
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
@@ -108,4 +121,46 @@ final class UserController extends AbstractController
 
         return $this->redirectToRoute('user_register');
     }
+
+    #[Route('/profile/{id}', name: '_profile')]
+    public function profile(User $user): Response
+    {
+        return $this->render('user/profile.html.twig', [
+            'user' => $user,
+        ]);
+    }
+
+    #[Route('/profile/{id}/edit', name: '_edit')]
+    public function edit(User $user, Request $request, EntityManagerInterface $em): Response
+    {
+        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $posterFile = $form->get('poster_file')->getData();
+            if ($posterFile) {
+                $filename = uniqid() . '.' . $posterFile->guessExtension();
+                $posterFile->move(
+                    $this->getParameter('uploads_directory'),
+                    $filename
+                );
+                $user->setPoster($filename);
+            }
+
+
+            $em->flush();
+
+            $this->addFlash('success', 'Profil mis à jour !');
+
+            return $this->redirectToRoute('user_edit', ['id' => $user->getId()]);
+        }
+
+        return $this->render('user/edit.html.twig', [
+            'form' => $form->createView(),
+            'user' => $user,
+        ]);
+    }
+
 }
+
