@@ -18,8 +18,6 @@ final class MainController extends AbstractController
         $events = $eventRepository->findAll();
         $sites = $siteRepository->findAll();
 
-        $em->persist();
-        $em->flush();
 
         return $this->render('event/display.html.twig', [
             'events' => $events,
