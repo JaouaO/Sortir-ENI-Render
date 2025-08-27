@@ -19,7 +19,7 @@ final class MainController extends AbstractController
         $sites = $siteRepository->findAll();
 
 
-        return $this->render('event/display.html.twig', [
+        return $this->render('main/index.html.twig', [
             'events' => $events,
             'sites' => $sites
         ]);
