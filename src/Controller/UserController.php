@@ -55,7 +55,7 @@ final class UserController extends AbstractController
     }
 
     #[Route('/register', name: '_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, ParameterBagInterface $parameterBag,FileUploader $fileUploader): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, ParameterBagInterface $parameterBag, FileUploader $fileUploader): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -64,7 +64,7 @@ final class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
-             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
             $file = $form->get('poster_file')->getData();
             if ($file instanceof UploadedFile) {
@@ -83,7 +83,7 @@ final class UserController extends AbstractController
             $this->emailVerifier->sendEmailConfirmation('user_verify_email', $user,
                 (new TemplatedEmail())
                     ->from(new Address('test@sortie.com', 'Sortie Mail Bot'))
-                    ->to((string) $user->getEmail())
+                    ->to((string)$user->getEmail())
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
@@ -113,7 +113,7 @@ final class UserController extends AbstractController
 
             return $this->redirectToRoute('user_profile', [
                 'id' => $user->getId(),
-                ]);
+            ]);
         }
 
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
@@ -122,12 +122,45 @@ final class UserController extends AbstractController
         return $this->redirectToRoute('user_register');
     }
 
-
     #[Route('/profile/{id}', name: '_profile')]
     public function profile(User $user): Response
     {
         return $this->render('user/profile.html.twig', [
             'user' => $user,
-            ]);
+        ]);
     }
+
+    #[Route('/profile/{id}/edit', name: '_edit')]
+    public function edit(User $user, Request $request, EntityManagerInterface $em): Response
+    {
+        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $posterFile = $form->get('poster_file')->getData();
+            if ($posterFile) {
+                $filename = uniqid() . '.' . $posterFile->guessExtension();
+                $posterFile->move(
+                    $this->getParameter('uploads_directory'),
+                    $filename
+                );
+                $user->setPoster($filename);
+            }
+
+
+            $em->flush();
+
+            $this->addFlash('success', 'Profil mis à jour !');
+
+            return $this->redirectToRoute('user_edit', ['id' => $user->getId()]);
+        }
+
+        return $this->render('user/edit.html.twig', [
+            'form' => $form->createView(),
+            'user' => $user,
+        ]);
+    }
+
 }
+
