@@ -6,7 +6,6 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use phpDocumentor\Reflection\Types\This;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -53,10 +52,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $phone = null;
 
     #[ORM\Column]
-    private ?bool $isAdmin = null;
+    private bool $isAdmin = false;
 
     #[ORM\Column]
-    private ?bool $isActive = null;
+    private ?bool $isActive = true;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $poster = null;
+
 
     /**
      * @var Collection<int, Event>
@@ -205,7 +208,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isAdmin(): ?bool
+
+    public function isAdmin(): bool
     {
         return $this->isAdmin;
     }
@@ -217,7 +221,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isActive(): ?bool
+    public function isActive(): bool
     {
         return $this->isActive;
     }
@@ -292,6 +296,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->site = $site;
 
+        return $this;
+    }
+
+
+    public function getPoster(): ?string
+    {
+        return $this->poster;
+    }
+
+    public function setPoster(?string $poster): self
+    {
+        $this->poster = $poster;
         return $this;
     }
 
