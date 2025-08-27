@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use App\Repository\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -210,5 +212,35 @@ class Event
         $this->site = $site;
 
         return $this;
+    }
+
+    #[Assert\Callback]
+    public function validate(ExecutionContextInterface $context): void
+    {
+        $now = new \DateTimeImmutable();
+
+        if ($this->registrationDeadline >= $this->startDateTime) {
+            $context->buildViolation('La date limite d’inscription doit être avant la date de l’événement.')
+                ->atPath('registrationDeadline')
+                ->addViolation();
+        }
+
+        if ($this->registrationDeadline <= $now) {
+            $context->buildViolation('La date limite d’inscription doit être après aujourd’hui.')
+                ->atPath('registrationDeadline')
+                ->addViolation();
+        }
+
+        if($this->maxParticipants <1) {
+            $context->buildViolation('Le nombre maximum de participant doit être supérieur à 0')
+                ->atPath('maxParticipants')
+                ->addViolation();
+        }
+
+        if($this->duration<2) {
+            $context->buildViolation('La durée de la sortie doit être supérieur à 1mn')
+                ->atPath('duration')
+                ->addViolation();
+        }
     }
 }
