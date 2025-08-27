@@ -90,7 +90,7 @@ final class UserController extends AbstractController
 
             // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('user_profile', ['id' => $user->getId()]);
         }
 
         return $this->render('registration/register.html.twig', [
@@ -111,12 +111,23 @@ final class UserController extends AbstractController
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
 
-            return $this->redirectToRoute('user_register');
+            return $this->redirectToRoute('user_profile', [
+                'id' => $user->getId(),
+                ]);
         }
 
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Your email address has been verified.');
 
         return $this->redirectToRoute('user_register');
+    }
+
+
+    #[Route('/profile/{id}', name: '_profile')]
+    public function profile(User $user): Response
+    {
+        return $this->render('user/profile.html.twig', [
+            'user' => $user,
+            ]);
     }
 }
