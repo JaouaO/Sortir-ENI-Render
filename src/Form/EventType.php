@@ -30,8 +30,10 @@ class EventType extends AbstractType
                 'widget' => 'single_text',
                 'label' => 'Date limite d’inscription'
             ])
-            ->add('duration', IntegerType::class, [
-                'label' => 'Durée de l\'évènement (en mn)'])
+            ->add('endDateTime', DateTimeType::class, [
+                'widget' => 'single_text',
+                'label' => 'Date et heure de fin de la sortie'
+            ])
             ->add('maxParticipants', IntegerType::class,['label'=>'Nombre maximum de participant.es'])
             ->add('eventInfo', TextAreaType::class, [
                 'label' => 'Informations de l\'évènement',
@@ -44,6 +46,16 @@ class EventType extends AbstractType
                 'class' => State::class,
                 'choice_label' => 'description',
                 'label' => 'Statut',
+            ])
+            ->add('cancelReason', TextareaType::class, [
+                'label' => 'Raison de l\'annulation',
+                'required' => false,
+                'attr' => [
+                    'id' => 'cancel_reason',
+                    'rows' => 3,
+                    'placeholder' => 'Expliquez pourquoi la sortie est annulée...',
+                    'style' => 'display:none;' // caché par défaut
+                ]
             ])
             ->add('site', EntityType::class, [
                 'class' => Site::class,

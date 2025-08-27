@@ -81,12 +81,17 @@ $places=[];
         for ($i = 0; $i < 10; $i++) {
             $event = new Event();
             $event->setName("Event " . $faker->word);
-            $event->setStartDateTime($faker->dateTimeBetween('+1 days', '+1 month'));
-            $event->setDuration($faker->numberBetween(60, 240));
-            $event->setRegistrationDeadline($faker->dateTimeBetween('now', '+5 days'));
+            $startDate = $faker->dateTimeBetween('+6 days', '+1 month');
+            $endDate = (clone $startDate)->modify('+'. $faker->numberBetween(1, 8) .' hours');
+            $registrationDeadline = (clone $startDate)->modify('-'. $faker->numberBetween(1, 5) .' days');
+
+            $event->setName("Event " . $faker->word);
+            $event->setStartDateTime($startDate);
+            $event->setEndDateTime($endDate);
+            $event->setRegistrationDeadline($registrationDeadline);
+
             $event->setMaxParticipants($faker->numberBetween(5, 20));
             $event->setEventInfo($faker->sentence);
-
 
             $event->setState($faker->randomElement($states));
             $event->setPlace($faker->randomElement($places));
