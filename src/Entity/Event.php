@@ -217,6 +217,17 @@ class Event
         return $this;
     }
 
+    public function getCancelReason(): ?string
+    {
+        return $this->cancelReason;
+    }
+
+    public function setCancelReason(?string $cancelReason): static
+    {
+        $this->cancelReason = $cancelReason;
+        return $this;
+    }
+
     #[Assert\Callback]
     public function validate(ExecutionContextInterface $context): void
     {
