@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sortie{% endblock %}
+
+{% block body %}
+    {#
+    <h1>Page de sortie de {{ event.id }}</h1>
+
+    <div class="container">
+        <h1>Afficher une sortie</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row event-info">
+                    <dt class="col-sm-5">Nom de la sortie :</dt>
+                    <dd class="col-sm-7">{{ event.name }}</dd>
+
+                    <dt class="col-sm-5">Date et heure :</dt>
+                    <dd class="col-sm-7">{{ event.startDateTime|date('d/m/Y') }}</dd>
+
+                    <dt class="col-sm-5">Date limite d'inscription :</dt>
+                    <dd class="col-sm-7">{{ event.registrationDeadLine|date('d/m/Y') }}</dd>
+
+                    <dt class="col-sm-5">Nombre de places :</dt>
+                    <dd class="col-sm-7">{{ event.maxParticipants }}</dd>
+
+                    <dt class="col-sm-5">Durée :</dt>
+                    <dd class="col-sm-7"> {{ event.duration}} minutes</dd>
+
+                    <dt class="col-sm-5">Description et infos :</dt>
+                    <dd class="col-sm-7">{{ event.eventInfo }}</dd>
+                </dl>
+            </div>
+
+            <div class="col-md-6">
+                <dl class="row event-info">
+                    <dt class="col-sm-5">Ville organisatrice :</dt>
+                    <dd class="col-sm-7">{{ event.place.city.name }}</dd>
+
+                    <dt class="col-sm-5">Lieu :</dt>
+                    <dd class="col-sm-7">{{ event.site.name }}</dd>
+
+                    <dt class="col-sm-5">Rue :</dt>
+                    <dd class="col-sm-7">{{ event.place.name }}</dd>
+
+                    <dt class="col-sm-5">Code postal :</dt>
+                    <dd class="col-sm-7">{{ event.place.city.postCode }}</dd>
+
+                    <dt class="col-sm-5">Latitude :</dt>
+                    <dd class="col-sm-7">{{ event.place.latitude}}</dd>
+
+                    <dt class="col-sm-5">Longitude :</dt>
+                    <dd class="col-sm-7">{{ event.place.longitude}}</dd>
+                </dl>
+            </div>
+        </div>
+<!--
+        <h3>Liste des participants inscrits :</h3>
+        <div class="table-responsive participants-table">
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Pseudo</th>
+                    <th>Nom</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($event->participants as $participant): ?>
+                <tr>
+                    <td><?= $participant['pseudo'] ?></td>
+                    <td><?= $participant['name'] ?></td>
+                </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        -->
+    </div>
+
+
+    #}
+{% endblock %}
