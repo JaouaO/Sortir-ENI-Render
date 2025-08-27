@@ -4,10 +4,13 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Helper\FileUploader;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
@@ -52,7 +55,7 @@ final class UserController extends AbstractController
     }
 
     #[Route('/register', name: '_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, ParameterBagInterface $parameterBag,FileUploader $fileUploader): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -61,15 +64,23 @@ final class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
+             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
-            // encode the plain password
-            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+            $file = $form->get('poster_file')->getData();
+            if ($file instanceof UploadedFile) {
+                $fileName = $fileUploader->upload(
+                    $file,
+                    $user->getPseudo(), // ou $user->getEmail(), ou même juste "profile"
+                    $parameterBag->get('photo')['photo_profile']
+                );
+                $user->setPoster($fileName);
+            }
 
             $entityManager->persist($user);
             $entityManager->flush();
 
             // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            $this->emailVerifier->sendEmailConfirmation('user_verify_email', $user,
                 (new TemplatedEmail())
                     ->from(new Address('test@sortie.com', 'Sortie Mail Bot'))
                     ->to((string) $user->getEmail())
@@ -87,7 +98,7 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/verify/email', name: 'app_verify_email')]
+    #[Route('/verify/email', name: '_verify_email')]
     public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
