@@ -58,22 +58,19 @@
                                 </div>
 
                                 <div>
-                                    <input type="checkbox" id="outingRegistered" name="registered"
-                                           {% if app.request.query.get('registered') is not empty %}checked{% endif %} />
+                                    <input type="checkbox" id="outingRegistered" name="registered"/>
                                     <label for="outingRegistered">Sorties
                                         auxquelles je suis inscrit/e</label>
                                 </div>
 
                                 <div >
-                                    <input type="checkbox" id="outingNotRegistered" name="notRegistered"
-                                           {% if app.request.query.get('notRegistered') is not empty %}checked{% endif %} />
+                                    <input type="checkbox" id="outingNotRegistered" name="notRegistered"/>
                                     <label for="outingNotRegistered">
                                         Sorties auxquelles je ne suis pas inscrit/e</label>
                                 </div>
 
                                 <div>
-                                    <input type="checkbox" id="outingPast" name="outingPast"
-                                           {% if app.request.query.get('outingPast') is not empty %}checked{% endif %} />
+                                    <input type="checkbox" id="outingPast" name="outingPast"/>
                                     <label for="outingPast">Sorties
                                         passées</label>
                                 </div>
