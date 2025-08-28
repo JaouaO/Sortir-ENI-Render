@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/administration', name: '_admin')]
+#[Route('/administration', name: 'admin')]
 final class AdminController extends AbstractController
 {
     #[Route('/interface', name: '_interface')]
