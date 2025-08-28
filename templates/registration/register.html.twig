@@ -20,13 +20,16 @@
         {{ form_row(registrationForm.email, {label: 'email' }) }}
         {{ form_row(registrationForm.plainPassword, {label: 'Mot de passe' }) }}
         {{ form_row(registrationForm.site, {label: 'Ville de rattachement' }) }}
+
         {{ form_row(registrationForm.agreeTerms, {label: 'Accepter les conditions d\'utilisations' }) }}
         {{ form_row(registrationForm.poster_file, {label: 'Ma photo' }) }}
-
 
 
         <button type="submit" class="btn">Enregistrer</button>
         <button type="submit" class="btn">Annuler</button>
 
+
+
     {{ form_end(registrationForm) }}
+
 {% endblock %}
