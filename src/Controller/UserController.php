@@ -7,8 +7,10 @@ use App\Form\RegistrationFormType;
 use App\Helper\FileUploader;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Constraint\FileExists;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -130,27 +132,39 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/profile/{id}/edit', name: '_edit')]
-    public function edit(User $user, Request $request, EntityManagerInterface $em): Response
+    #[Route('/profile/{id}/edit', name: '_edit',requirements: ['id' => '\d+'])]
+    public function edit(
+        Request $request,
+        EntityManagerInterface $em,
+        FileUploader $fileUploader,
+        ParameterbagInterface $parameterBag,
+        Security $security,
+    ): Response
     {
+        /**@var User $user */
+        $user = $security->getUser();
+
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $posterFile = $form->get('poster_file')->getData();
-            if ($posterFile) {
-                $filename = uniqid() . '.' . $posterFile->guessExtension();
-                $posterFile->move(
-                    $this->getParameter('uploads_directory'),
-                    $filename
+            $file = $form->get('poster_file')->getData();
+            if ($file instanceof UploadedFile) {
+
+                $dir = $parameterBag->get('photo')['photo_profile'];
+                $name = $fileUploader->upload(
+                    $file,
+                    $user->getPseudo(),
+                    $dir
                 );
-                $user->setPoster($filename);
+                if($user->getPoster() && file_exists($dir . '/' . $user->getPoster())) {
+                    unlink($dir. '/' . $user->getPoster());
+                    }
+                $user->setPoster($name);
             }
 
-
             $em->flush();
-
             $this->addFlash('success', 'Profil mis à jour !');
 
             return $this->redirectToRoute('user_edit', ['id' => $user->getId()]);

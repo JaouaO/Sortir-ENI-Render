@@ -102,20 +102,20 @@ final class EventController extends AbstractController
     }
 
     #[Route('/{id}', name: '_display')]
-    public function display(Event $event, EntityManagerInterface $em, StateRepository $stateRepository): Response
+    public function display(Event $event): Response
     {
-        $cancelState = $stateRepository->findOneBy(['description' => 'Annulée']);
-        if($event->getState()->getId() === $cancelState->getId()) {
-            return $this->render('event/display.html.twig', ['event' => $event, 'canceled' => true]);
-        }
-        return $this->render('event/display.html.twig', ['event' => $event, 'canceled' => false]);
+
+        $state = $event->getState();
+
+        return $this->render('event/display.html.twig', ['event' => $event, 'state' => $state->getDescription()]);
     }
 
-    #[Route('/event/{id}/register', name: '_register')]
-    public function register(Event $event, EntityManagerInterface $em, StateRepository $stateRepository): Response
+    #[Route('/{id}/inscription', name: '_register')]
+    public function register(Event $event, EntityManagerInterface $em): Response
     {
-        $cancelState = $stateRepository->findOneBy(['description' => 'Annulée']);
+
         $user = $this->getUser();
+        $state = $event->getState();
 
         if (!$user) {
             throw $this->createAccessDeniedException('Vous devez être connecté.e pour vous inscrire.');
@@ -127,7 +127,7 @@ final class EventController extends AbstractController
             $this->addFlash('danger', 'Le nombre maximum de participants est atteint.');
         } elseif ($event->getRegistrationDeadline() < new \DateTimeImmutable()) {
             $this->addFlash('danger', 'La date limite d’inscription est passée.');
-        }elseif ($event->getState()===$cancelState){
+        }elseif ($state->getDescription() == 'Annulée') {
             $this->addFlash('danger', 'La sortie a été annullée.');
         }else {
             $event->addRegisteredParticipant($user);
@@ -137,4 +137,20 @@ final class EventController extends AbstractController
 
         return $this->redirectToRoute('event_display', ['id' => $event->getId()]);
     }
+
+    #[Route('/{id}/desinscription', name: '_unregister')]
+    public function unregister(Event $event, EntityManagerInterface $em): Response
+    {
+        $user = $this->getUser();
+        if ($event->getRegisteredParticipants()->contains($user)) {
+            $this->addFlash('warning', 'Vous vous êtes bien désinscrit.e de cette sortie.');
+            $event->removeRegisteredParticipant($user);
+            $em->flush();
+            return $this->redirectToRoute('event_display', ['id' => $event->getId()]);
+        }else{
+            $this->addFlash('warning', 'Vous n\'êtes pas inscrit.e à cette sortie.');
+            return $this->redirectToRoute('event_display', ['id' => $event->getId()]);
+        }
+    }
+
 }

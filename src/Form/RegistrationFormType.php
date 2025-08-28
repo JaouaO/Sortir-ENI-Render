@@ -28,7 +28,7 @@ class RegistrationFormType extends AbstractType
             ->add('email')
             ->add('site', EntityType::class, [
                 'class' => Site::class,
-                'choice_label' => 'name', // ou Symfony utilisera __toString()
+                'choice_label' => 'name',
                 'placeholder' => '-- Choisissez un site --',
                 'required' => false,
             ])
