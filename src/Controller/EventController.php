@@ -99,7 +99,7 @@ final class EventController extends AbstractController
         if($event->getState()->getId() === $cancelState->getId()) {
             return $this->render('event/display.html.twig', ['event' => $event, 'canceled' => true]);
         }
-        return $this->render('event/display.html.twig', ['event' => $event]);
+        return $this->render('event/display.html.twig', ['event' => $event, 'canceled' => false]);
     }
 
     #[Route('/event/{id}/register', name: '_register')]
