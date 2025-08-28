@@ -58,15 +58,13 @@
                                 </div>
 
                                 <div>
-                                    <input type="checkbox" id="outingRegistered" name="registered"/>
-                                    <label for="outingRegistered">Sorties
-                                        auxquelles je suis inscrit/e</label>
+                                    <input type="checkbox" id="outingRegistered" name="registered" value="1" {% if app.request.get('registered') %}checked{% endif %}/>
+                                    <label for="outingRegistered">Sorties auxquelles je suis inscrit/e</label>
                                 </div>
 
-                                <div >
-                                    <input type="checkbox" id="outingNotRegistered" name="notRegistered"/>
-                                    <label for="outingNotRegistered">
-                                        Sorties auxquelles je ne suis pas inscrit/e</label>
+                                <div>
+                                    <input type="checkbox" id="outingNotRegistered" name="notRegistered" value="1" {% if app.request.get('not_registered') %}checked{% endif %}/>
+                                    <label for="outingNotRegistered">Sorties auxquelles je ne suis pas inscrit/e</label>
                                 </div>
 
                                 <div>
@@ -133,16 +131,16 @@
                                 {{ event.registrationDeadline | date("d/m/Y H:i") }}
                             </td>
                             <td>
-                                {# {{ inscriptionCount[event.id] }} /#} {{ event.maxParticipants }}
+                                  {{ nbRegisteredByEvent[event.id] }} / {{ event.maxParticipants }}
                             </td>
                             <td>
                                  {{ event.state.description }}
                             </td>
                             <td>
-                                <span>Inscrit</span>
+                            {{ isUserEventRegistered[event.id] ? 'inscrit' : '' }}
                             </td>
                             <td>
-                                {#  {{event.organizer.pseudo}}#}
+                                <a href="{{ path('user_profile', {id: event.organizer.id}) }}">{{event.organizer.pseudo}}</a>
                             </td>
                             <td>
                                  <a href="{{ path('event_display', {id: event.id}) }}">Afficher</a>
