@@ -251,12 +251,12 @@ class Event
                 ->addViolation();
         }
 
-        if($this->endDateTime>= $this->startDateTime) {
+        if($this->endDateTime<= $this->startDateTime) {
             $context->buildViolation('La fin de la sortie doit être après son début')
                 ->atPath('endDateTime')
                 ->addViolation();
         }
-        if ($this->state && strtolower($this->state->getDescription()) === 'annulé' && empty($this->cancelReason)) {
+        if ($this->state && strtolower($this->state->getDescription()) === 'annulée' && empty($this->cancelReason)) {
             $context->buildViolation('Vous devez fournir une raison si la sortie est annulée.')
                 ->atPath('cancelReason')
                 ->addViolation();

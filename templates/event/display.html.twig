@@ -14,17 +14,17 @@
                     <dt class="col-sm-5">Nom de la sortie :</dt>
                     <dd class="col-sm-7">{{ event.name }}</dd>
 
-                    <dt class="col-sm-5">Date et heure :</dt>
-                    <dd class="col-sm-7">{{ event.startDateTime|date('d/m/Y') }}</dd>
+                    <dt class="col-sm-5">Date et heure de début :</dt>
+                    <dd class="col-sm-7">{{ event.startDateTime|date('d/m/Y H:i') }}</dd>
+
+                    <dt class="col-sm-5">Date et heure de fin:</dt>
+                    <dd class="col-sm-7">{{ event.endDateTime|date('d/m/Y H:i') }}</dd>
 
                     <dt class="col-sm-5">Date limite d'inscription :</dt>
-                    <dd class="col-sm-7">{{ event.registrationDeadLine|date('d/m/Y') }}</dd>
+                    <dd class="col-sm-7">{{ event.registrationDeadLine|date('d/m/Y H:i') }}</dd>
 
                     <dt class="col-sm-5">Nombre de places :</dt>
                     <dd class="col-sm-7">{{ event.maxParticipants }}</dd>
-
-                    <dt class="col-sm-5">Durée :</dt>
-                    <dd class="col-sm-7"> {{ event.duration}} minutes</dd>
 
                     <dt class="col-sm-5">Description et infos :</dt>
                     <dd class="col-sm-7">{{ event.eventInfo }}</dd>

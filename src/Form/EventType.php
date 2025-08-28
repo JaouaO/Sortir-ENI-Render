@@ -24,15 +24,15 @@ class EventType extends AbstractType
             ->add('name', TextType::class, ['label' => 'Nom'])
             ->add('startDateTime', DateTimeType::class, [
                 'widget' => 'single_text',
-                'label' => 'Date et heure de l’événement'
-            ])
-            ->add('registrationDeadline', DateTimeType::class, [
-                'widget' => 'single_text',
-                'label' => 'Date limite d’inscription'
+                'label' => 'Date et heure de la sortie'
             ])
             ->add('endDateTime', DateTimeType::class, [
                 'widget' => 'single_text',
                 'label' => 'Date et heure de fin de la sortie'
+            ])
+            ->add('registrationDeadline', DateTimeType::class, [
+                'widget' => 'single_text',
+                'label' => 'Date limite d’inscription'
             ])
             ->add('maxParticipants', IntegerType::class,['label'=>'Nombre maximum de participant.es'])
             ->add('eventInfo', TextAreaType::class, [
@@ -40,22 +40,12 @@ class EventType extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'rows' => 5,
-                    'placeholder' => 'Ajoutez une description ou des infos utiles sur l’événement...'
+                    'placeholder' => 'Ajoutez une description ou des infos utiles sur la sortie'
                 ]])
             ->add('state', EntityType::class, [
                 'class' => State::class,
                 'choice_label' => 'description',
                 'label' => 'Statut',
-            ])
-            ->add('cancelReason', TextareaType::class, [
-                'label' => 'Raison de l\'annulation',
-                'required' => false,
-                'attr' => [
-                    'id' => 'cancel_reason',
-                    'rows' => 3,
-                    'placeholder' => 'Expliquez pourquoi la sortie est annulée...',
-                    'style' => 'display:none;' // caché par défaut
-                ]
             ])
             ->add('site', EntityType::class, [
                 'class' => Site::class,
