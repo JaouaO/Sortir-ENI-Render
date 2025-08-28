@@ -74,6 +74,43 @@
                 </tbody>
             </table>
         </div>
+
+        {% if canceled %}
+            <dt class="col-sm-5">Raison de l'annulation :</dt>
+            <dd class="col-sm-7">{{ event.cancelReason }}</dd>
+
+        {% endif %}
+
+
+        {% if app.user %}
+            {% if event.registeredParticipants.contains(app.user) %}
+                <button class="btn btn-secondary" disabled>
+                    Déjà inscrit
+                </button>
+            {% elseif event.registeredParticipants|length >= event.maxParticipants %}
+                <button class="btn btn-danger" disabled>
+                    Complet
+                </button>
+            {% elseif event.registrationDeadline <date('now')  %}
+                <button class="btn btn-danger" disabled>
+                   Date d'inscription dépassée
+                </button>
+            {% elseif canceled %}
+                <button class="btn btn-danger" disabled>
+                    Sortie annulée
+                </button>
+            {% else %}
+                <form method="post" action="{{ path('event_register', {id: event.id}) }}">
+                    <button type="submit" class="btn btn-primary">
+                        S'inscrire
+                    </button>
+                </form>
+            {% endif %}
+        {% else %}
+            <a href="{{ path('app_login') }}" class="btn btn-primary">
+                Connectez-vous pour vous inscrire
+            </a>
+        {% endif %}
     </div>
 
 {% endblock %}

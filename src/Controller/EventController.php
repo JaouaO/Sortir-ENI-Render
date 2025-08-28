@@ -35,13 +35,13 @@ final class EventController extends AbstractController
             #return $this->redirectToRoute('event_display', ['id' => $event->getId()]);
         }
 
-        return $this->render('event/edit.html.twig',[
+        return $this->render('event/edit.html.twig', [
             'event_form' => $form,
             'mode' => 'create'
         ]);
     }
 
-     #[Route('/{id}/modifier', name: '_edit', requirements: ['id' => '\d+'])]
+    #[Route('/{id}/modifier', name: '_edit', requirements: ['id' => '\d+'])]
     public function edit(Event $event, Request $request, EntityManagerInterface $em): Response
     {
 
@@ -54,23 +54,25 @@ final class EventController extends AbstractController
 
             $this->addFlash('success', 'Une sortie à été modifiée avec succès');
 
-           return $this->render('event_display',['id' => $event->getId()]);
+            return $this->render('event_display', ['id' => $event->getId()]);
         }
 
 
-        return $this->render('event/edit.html.twig',[
+        return $this->render('event/edit.html.twig', [
             'event_form' => $form,
             'mode' => 'edit'
         ]);
     }
+
     #[Route('/{id}/annuler', name: '_cancel')]
     //#[IsGranted('ROLE_ORGANISATEUR')]
     public function cancel(
-        Event $event,
-        Request $request,
+        Event                  $event,
+        Request                $request,
         EntityManagerInterface $em,
-        StateRepository $stateRepository
-    ): Response {
+        StateRepository        $stateRepository
+    ): Response
+    {
         $form = $this->createForm(EventCancelType::class, $event);
         $form->handleRequest($request);
 
@@ -91,8 +93,39 @@ final class EventController extends AbstractController
     }
 
     #[Route('/{id}', name: '_display')]
-    public function display(Event $event): Response
+    public function display(Event $event, EntityManagerInterface $em, StateRepository $stateRepository): Response
     {
-        return $this->render('event/display.html.twig',['event' => $event]);
+        $cancelState = $stateRepository->findOneBy(['description' => 'Annulée']);
+        if($event->getState()->getId() === $cancelState->getId()) {
+            return $this->render('event/display.html.twig', ['event' => $event, 'canceled' => true]);
+        }
+        return $this->render('event/display.html.twig', ['event' => $event]);
+    }
+
+    #[Route('/event/{id}/register', name: '_register')]
+    public function register(Event $event, EntityManagerInterface $em, StateRepository $stateRepository): Response
+    {
+        $cancelState = $stateRepository->findOneBy(['description' => 'Annulée']);
+        $user = $this->getUser();
+
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté.e pour vous inscrire.');
+        }
+
+        if ($event->getRegisteredParticipants()->contains($user)) {
+            $this->addFlash('warning', 'Vous êtes déjà inscrit.e à cette sortie.');
+        } elseif (count($event->getRegisteredParticipants()) >= $event->getMaxParticipants()) {
+            $this->addFlash('danger', 'Le nombre maximum de participants est atteint.');
+        } elseif ($event->getRegistrationDeadline() < new \DateTimeImmutable()) {
+            $this->addFlash('danger', 'La date limite d’inscription est passée.');
+        }elseif ($event->getState()===$cancelState){
+            $this->addFlash('danger', 'La sortie a été annullée.');
+        }else {
+            $event->addRegisteredParticipant($user);
+            $em->flush();
+            $this->addFlash('success', 'Vous êtes bien inscrit.e à la sortie!');
+        }
+
+        return $this->redirectToRoute('event_display', ['id' => $event->getId()]);
     }
 }
