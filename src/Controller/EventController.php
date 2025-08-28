@@ -101,7 +101,7 @@ final class EventController extends AbstractController
         return $this->render('event/display.html.twig', ['event' => $event, 'state' => $state->getDescription()]);
     }
 
-    #[Route('/event/{id}/register', name: '_register')]
+    #[Route('/{id}/inscription', name: '_register')]
     public function register(Event $event, EntityManagerInterface $em): Response
     {
 
@@ -129,7 +129,7 @@ final class EventController extends AbstractController
         return $this->redirectToRoute('event_display', ['id' => $event->getId()]);
     }
 
-    #[Route('/event/{id}/unregister', name: '_unregister')]
+    #[Route('/{id}/desinscription', name: '_unregister')]
     public function unregister(Event $event, EntityManagerInterface $em): Response
     {
         $user = $this->getUser();
