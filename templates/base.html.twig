@@ -36,10 +36,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('event_edit', {'id' : 15}) }}">Modifier une sortie</a>
                     </li>
-                    {% endif %}
+
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('event_cancel', {'id' : 15}) }}">Annuler une sortie</a>
                     </li>
+                    {% endif %}
 
                     {% if is_granted('ROLE_ADMINISTRATEUR') %}
                     <li class="nav-item">
@@ -66,12 +67,14 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('user_register') }}"> Inscription</a>
                     </li>
+                    {% if is_granted('IS_AUTHENTICATED') %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('user_profile', {'id' : 21}) }}"> Mon profil</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('user_edit', {'id' : 21}) }}"> Modifier mon profil</a>
                     </li>
+                    {% endif %}
 
 
         </ul>
