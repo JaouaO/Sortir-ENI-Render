@@ -24,30 +24,46 @@
             </button>
             <div class="navbar-collapse">
                 <ul class="navbar-nav ms-auto">
+                    {% if is_granted('IS_AUTHENTICATED') %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('event_create') }}">Créer une sortie</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('event_display', {'id' : 15}) }}"> Afficher une sortie</a>
                     </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_ORGANISATEUR') %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('event_edit', {'id' : 15}) }}">Modifier une sortie</a>
                     </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_ORGANISATEUR') %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('event_cancel', {'id' : 15}) }}">Annuler une sortie</a>
                     </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMINISTRATEUR') %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('manager_cities') }}">Gérer les villes</a>
                     </li>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMINISTRATEUR') %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('manager_places') }}"> Gérer les sites</a>
                     </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('home') }}">Accueil</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('user_login') }}"> Connexion</a>
-                    </li>
+                    {% if is_granted('IS_AUTHENTICATED') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('user_logout') }}">Déconnexion</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('user_login') }}">Connexion</a>
+                        </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('user_register') }}"> Inscription</a>
                     </li>
@@ -59,16 +75,14 @@
                     </li>
 
 
-                </ul>
-            </div>
-        </div>
+        </ul>
     </nav>
-    
 
 
 
 
-        {% block body %}{% endblock %}
-    {% block script %}{% endblock %}
+
+    {% block body %}{% endblock %}
+
     </body>
 </html>
