@@ -20,4 +20,16 @@ final class AdminController extends AbstractController
 
         return $this->render('admin/interface.html.twig', ['events' => $events, 'users' => $users]);
     }
+
+    #[Route('/{id}/desactiver', name: '_desactivate')]
+    public function desactivate(): Response
+    {
+        return $this->render('admin/interface.html.twig', ['events' => $events, 'users' => $users]);
+    }
+
+    #[Route('/{id}/supprimer', name: '_delete')]
+    public function delete(): Response
+    {
+        return $this->render('admin/interface.html.twig', ['events' => $events, 'users' => $users]);
+    }
 }
