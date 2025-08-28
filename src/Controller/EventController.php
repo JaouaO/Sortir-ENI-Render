@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Event;
+use App\Form\EventCancelType;
 use App\Form\EventType;
 use App\Repository\EventRepository;
+use App\Repository\StateRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,10 +64,30 @@ final class EventController extends AbstractController
         ]);
     }
     #[Route('/{id}/annuler', name: '_cancel')]
-    #[IsGranted('ROLE_ORGANISATEUR')]
-    public function cancel(int $id): Response
-    {
-        return $this->render('event/cancel.html.twig',['id' => $id]);
+    //#[IsGranted('ROLE_ORGANISATEUR')]
+    public function cancel(
+        Event $event,
+        Request $request,
+        EntityManagerInterface $em,
+        StateRepository $stateRepository
+    ): Response {
+        $form = $this->createForm(EventCancelType::class, $event);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $cancelState = $stateRepository->findOneBy(['description' => 'Annulée']);
+            $event->setState($cancelState);
+
+            $em->flush();
+
+            $this->addFlash('danger', 'La sortie a été annulé.');
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('event/cancel.html.twig', [
+            'event' => $event,
+            'form' => $form,
+        ]);
     }
 
     #[Route('/{id}', name: '_display')]
