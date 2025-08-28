@@ -24,7 +24,7 @@ class Event
     private ?\DateTime $startDateTime = null;
 
     #[ORM\Column]
-    private ?int $duration = null;
+    private ?\DateTime $endDateTime = null;
 
     #[ORM\Column]
     private ?\DateTime $registrationDeadline = null;
@@ -38,6 +38,9 @@ class Event
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?State $state = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $cancelReason = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
@@ -91,14 +94,14 @@ class Event
         return $this;
     }
 
-    public function getDuration(): ?int
+    public function getEndDateTime():  ?\DateTime
     {
-        return $this->duration;
+        return $this->endDateTime;
     }
 
-    public function setDuration(int $duration): static
+    public function setEndDateTime(\DateTime $endDateTime): static
     {
-        $this->duration = $duration;
+        $this->endDateTime = $endDateTime;
 
         return $this;
     }
@@ -214,6 +217,17 @@ class Event
         return $this;
     }
 
+    public function getCancelReason(): ?string
+    {
+        return $this->cancelReason;
+    }
+
+    public function setCancelReason(?string $cancelReason): static
+    {
+        $this->cancelReason = $cancelReason;
+        return $this;
+    }
+
     #[Assert\Callback]
     public function validate(ExecutionContextInterface $context): void
     {
@@ -237,9 +251,14 @@ class Event
                 ->addViolation();
         }
 
-        if($this->duration<2) {
-            $context->buildViolation('La durée de la sortie doit être supérieur à 1mn')
-                ->atPath('duration')
+        if($this->endDateTime>= $this->startDateTime) {
+            $context->buildViolation('La fin de la sortie doit être après son début')
+                ->atPath('endDateTime')
+                ->addViolation();
+        }
+        if ($this->state && strtolower($this->state->getDescription()) === 'annulé' && empty($this->cancelReason)) {
+            $context->buildViolation('Vous devez fournir une raison si la sortie est annulée.')
+                ->atPath('cancelReason')
                 ->addViolation();
         }
     }
