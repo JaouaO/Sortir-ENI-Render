@@ -28,22 +28,48 @@
                             {% for user in users %}
                                 <tr>
                                     <td>{{ loop.index }}</td>
-                                    <td><a class="link-body-emphasis link-underline-opacity-0"
-                                           href="{{ path('user_profile', {id: user.id}) }}">{{ user.name }}</a></td>
-                                    <td><a class="link-body-emphasis link-underline-opacity-0"
-                                           href="{{ path('user_profile', {id: user.id}) }}">{{ user.email }}</a></td>
+                                    <td><a
+                                                {% if user.isAdmin %}
+                                                    class="link-danger link-underline-opacity-0"
+                                                {% else %}
+                                                    class="link-body-emphasis link-underline-opacity-0"
+                                                {% endif %}
+                                                href="{{ path('user_profile', {id: user.id}) }}">
+                                            {{ user.name }}
+                                        </a>
+                                    </td>
+                                    <td><a
+                                                {% if user.isAdmin %}
+                                                    class="link-danger link-underline-opacity-0"
+                                                {% else %}
+                                                    class="link-body-emphasis link-underline-opacity-0"
+                                                {% endif %}
+                                                href="{{ path('user_profile', {id: user.id}) }}">
+                                            {{ user.email }}
+                                        </a>
+                                    </td>
                                     <td>
-                                        <a href="{{ path('admin_desactivate', {id: user.id}) }}"
-                                           class="btn btn-sm btn-warning"
-                                           onclick="return confirm('Etes vous sûr de vouloir rendre cet utilisateur inactif?')">
-                                            Rendre inactif
-                                        </a>
-                                        <a href="{{ path('admin_delete', {id: user.id}) }}"
-                                           class="btn btn-sm btn-danger"
-                                           onclick="return confirm('Etes vous sûr de vouloir supprimer cet utilisateur ?')">
+                                        {% if user.isAdmin==false %}
+                                            {% if user.isActive %}
+                                            <a href="{{ path('admin_desactivate', {id: user.id}) }}"
+                                               class="btn btn-sm btn-warning"
+                                               onclick="return confirm('Etes vous sûr de vouloir rendre cet utilisateur inactif?')">
+                                                Rendre inactif
+                                            </a>
+                                                {% else %}
+                                                    <a href="{{ path('admin_reactivate', {id: user.id}) }}"
+                                                       class="btn btn-sm btn-outline-secondary"
+                                                       onclick="return confirm('Etes vous sûr de vouloir réactiver cet utilisateur?')">
+                                                       Réactiver
+                                                    </a>
+                                                    {% endif %}
+                                            <a href="{{ path('admin_delete', {id: user.id}) }}"
+                                               class="btn btn-sm btn-danger"
+                                               onclick="return confirm('Etes vous sûr de vouloir supprimer cet utilisateur ?')">
 
-                                            Supprimer
-                                        </a>
+                                                Supprimer
+                                            </a>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% else %}

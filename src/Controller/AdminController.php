@@ -35,6 +35,17 @@ final class AdminController extends AbstractController
         return $this->redirectToRoute('admin_interface');
     }
 
+    #[Route('/{id}/reactiver', name: '_reactivate')]
+    public function reactivate(User $user, EntityManagerInterface $em): Response
+    {
+
+        $user->setIsActive(true);
+        $em->flush();
+
+        $this->addFlash('success', "L'utilisateur {$user->getName()} a bien été réactivé.");
+        return $this->redirectToRoute('admin_interface');
+    }
+
     #[Route('/{id}/supprimer', name: '_delete')]
     public function delete(int $id, EntityManagerInterface $em): Response
     {
