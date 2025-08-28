@@ -45,10 +45,10 @@
                     <dd class="col-sm-7">{{ event.place.city.postCode }}</dd>
 
                     <dt class="col-sm-5">Latitude :</dt>
-                    <dd class="col-sm-7">{{ event.place.latitude}}</dd>
+                    <dd class="col-sm-7">{{ event.place.latitude }}</dd>
 
                     <dt class="col-sm-5">Longitude :</dt>
-                    <dd class="col-sm-7">{{ event.place.longitude}}</dd>
+                    <dd class="col-sm-7">{{ event.place.longitude }}</dd>
                 </dl>
             </div>
         </div>
@@ -64,18 +64,21 @@
                 </thead>
                 <tbody>
                 {% for participant in event.registeredParticipants %}
-                <tr>
-                    <td><a class="link-body-emphasis link-underline-opacity-0" href="{{ path('user_profile',{'id': participant.id }) }}">{{ participant.pseudo }}</a></td>
-                    <td><a class="link-body-emphasis link-underline-opacity-0" href="{{ path('user_profile',{'id': participant.id }) }}">{{ participant.name }}</a></td>
-                </tr>
-                    {% else %}
+                    <tr>
+                        <td><a class="link-body-emphasis link-underline-opacity-0"
+                               href="{{ path('user_profile',{'id': participant.id }) }}">{{ participant.pseudo }}</a>
+                        </td>
+                        <td><a class="link-body-emphasis link-underline-opacity-0"
+                               href="{{ path('user_profile',{'id': participant.id }) }}">{{ participant.name }}</a></td>
+                    </tr>
+                {% else %}
                     <p>pas de participants</p>
-                {%endfor  %}
+                {% endfor %}
                 </tbody>
             </table>
         </div>
 
-        {% if canceled %}
+        {% if state == 'Annulée' %}
             <dt class="col-sm-5">Raison de l'annulation :</dt>
             <dd class="col-sm-7">{{ event.cancelReason }}</dd>
 
@@ -83,34 +86,40 @@
 
 
         {% if app.user %}
-            {% if event.registeredParticipants.contains(app.user) %}
+
+            {% if event.state.description == 'Annulée' %}
+                <button class="btn btn-danger" disabled>
+                    Sortie annulée
+                </button>
+            {% elseif event.registeredParticipants.contains(app.user) %}
                 <button class="btn btn-secondary" disabled>
                     Déjà inscrit
                 </button>
+
             {% elseif event.registeredParticipants|length >= event.maxParticipants %}
                 <button class="btn btn-danger" disabled>
                     Complet
                 </button>
-            {% elseif event.registrationDeadline <date('now')  %}
+            {% elseif event.registrationDeadline <date('now') %}
                 <button class="btn btn-danger" disabled>
-                   Date d'inscription dépassée
+                    Date d'inscription dépassée
                 </button>
-            {% elseif canceled %}
-                <button class="btn btn-danger" disabled>
-                    Sortie annulée
-                </button>
+
             {% else %}
+
                 <form method="post" action="{{ path('event_register', {id: event.id}) }}">
                     <button type="submit" class="btn btn-primary">
                         S'inscrire
                     </button>
                 </form>
+            {% else %}
+                <p>Une erreur est survenue</p>
             {% endif %}
-        {% else %}
-            <a href="{{ path('app_login') }}" class="btn btn-primary">
-                Connectez-vous pour vous inscrire
-            </a>
-        {% endif %}
+            {% else %}
+                <a href="{{ path('user_login') }}" class="btn btn-primary">
+                    Connectez-vous pour vous inscrire
+                </a>
+            {% endif %}
     </div>
 
 {% endblock %}
