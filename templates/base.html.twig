@@ -37,11 +37,10 @@
                         <a class="nav-link" href="{{ path('event_edit', {'id' : 15}) }}">Modifier une sortie</a>
                     </li>
                     {% endif %}
-                    {% if is_granted('ROLE_ORGANISATEUR') %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('event_cancel', {'id' : 15}) }}">Annuler une sortie</a>
                     </li>
-                    {% endif %}
+
                     {% if is_granted('ROLE_ADMINISTRATEUR') %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('manager_cities') }}">Gérer les villes</a>

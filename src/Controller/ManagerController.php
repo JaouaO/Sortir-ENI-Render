@@ -14,7 +14,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class ManagerController extends AbstractController
 {
     #[Route('/villes', name: '_cities', methods: ['GET'])]
-    #[IsGranted('ROLE_ADMINISTRATEUR')]
+    //#[IsGranted('ROLE_ADMINISTRATEUR')]
     public function cities(CityRepository $cityRepository, Request $request): Response
     {
         $searchTerm = $request->query->get('search');
@@ -27,7 +27,7 @@ final class ManagerController extends AbstractController
     }
 
     #[Route('/sites', name: '_places')]
-    #[IsGranted('ROLE_ADMINISTRATEUR')]
+    //#[IsGranted('ROLE_ADMINISTRATEUR')]
     public function places(): Response
     {
         return $this->render('manager/places.html.twig');
