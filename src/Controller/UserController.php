@@ -70,7 +70,7 @@ final class UserController extends AbstractController
             if ($file instanceof UploadedFile) {
                 $fileName = $fileUploader->upload(
                     $file,
-                    $user->getPseudo(), // ou $user->getEmail(), ou même juste "profile"
+                    $user->getPseudo(),
                     $parameterBag->get('photo')['photo_profile']
                 );
                 $user->setPoster($fileName);
