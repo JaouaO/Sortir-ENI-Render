@@ -60,7 +60,7 @@ $places=[];
 
 
         $users = [];
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             $user = new User();
             $user->setName($faker->lastName);
             $user->setFirstName($faker->firstName);
@@ -78,7 +78,7 @@ $places=[];
         }
 
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $event = new Event();
             $event->setName("Event " . $faker->word);
             $startDate = $faker->dateTimeBetween('+6 days', '+1 month');
