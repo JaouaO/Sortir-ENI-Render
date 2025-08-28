@@ -106,7 +106,7 @@ final class EventController extends AbstractController
     {
 
         $user = $this->getUser();
-        $state = $user->getState();
+        $state = $event->getState();
 
         if (!$user) {
             throw $this->createAccessDeniedException('Vous devez être connecté.e pour vous inscrire.');
@@ -128,4 +128,20 @@ final class EventController extends AbstractController
 
         return $this->redirectToRoute('event_display', ['id' => $event->getId()]);
     }
+
+    #[Route('/event/{id}/unregister', name: '_unregister')]
+    public function unregister(Event $event, EntityManagerInterface $em): Response
+    {
+        $user = $this->getUser();
+        if ($event->getRegisteredParticipants()->contains($user)) {
+            $this->addFlash('warning', 'Vous vous êtes bien désinscrit.e de cette sortie.');
+            $event->removeRegisteredParticipant($user);
+            $em->flush();
+            return $this->redirectToRoute('event_display', ['id' => $event->getId()]);
+        }else{
+            $this->addFlash('warning', 'Vous n\'êtes pas inscrit.e à cette sortie.');
+            return $this->redirectToRoute('event_display', ['id' => $event->getId()]);
+        }
+    }
+
 }
