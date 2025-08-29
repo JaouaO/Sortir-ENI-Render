@@ -82,8 +82,6 @@ final class EventController extends AbstractController
         StateRepository        $stateRepository
     ): Response
     {
-
-
         $form = $this->createForm(EventCancelType::class, $event);
         $form->handleRequest($request);
 
@@ -92,16 +90,19 @@ final class EventController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $cancelState = $stateRepository->findOneBy(['description' => 'Annulée']);
-            $event->setState($cancelState);
-
-            $em->flush();
-
-            $this->addFlash('danger', 'La sortie a été annulé.');
+        $cancelState = $stateRepository->findOneBy(['description' => 'Annulée']);
+        if (!$cancelState) {
+            $this->addFlash('danger', 'L\'état "Annulée" n\'a pas été trouvé. L\'opération a échoué.');
             return $this->redirectToRoute('home');
         }
+
+        $event->setState($cancelState);
+
+        $em->flush();
+
+        $this->addFlash('success', 'La sortie a été annulée avec succès.');
+
+        return $this->redirectToRoute('home');
 
         return $this->render('event/cancel.html.twig', [
             'event' => $event,
@@ -112,10 +113,10 @@ final class EventController extends AbstractController
     #[Route('/{id}', name: '_display')]
     public function display(Event $event): Response
     {
-
         $state = $event->getState();
 
-        return $this->render('event/display.html.twig', ['event' => $event, 'state' => $state->getDescription()]);
+        return $this->render('event/display.html.twig',
+            ['event' => $event, 'state' => $state->getDescription()]);
     }
 
     #[Route('/{id}/inscription', name: '_register')]
