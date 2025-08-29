@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
@@ -139,13 +140,14 @@ final class UserController extends AbstractController
         FileUploader           $fileUploader,
         ParameterbagInterface  $parameterBag,
         User                   $userProfile,
+        AdminController        $admin,
 
     ): Response
     {
-        /**@var User $user */
+
             $userLogged = $this->getUser();
 
-        if ($userLogged !== $userProfile) {
+        if ($userLogged !== $userProfile  && !in_array('ROLE_ADMINISTRATEUR', $userLogged->getRoles())) {
             $this->addFlash('danger', 'Vous n\'avez pas accès aux modifications.');
             return $this->redirectToRoute('home');
         }
