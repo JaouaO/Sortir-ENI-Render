@@ -8,9 +8,12 @@ use App\Form\EventType;
 use App\Repository\EventRepository;
 use App\Repository\StateRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -120,7 +123,7 @@ final class EventController extends AbstractController
     }
 
     #[Route('/{id}/inscription', name: '_register')]
-    public function register(Event $event, EntityManagerInterface $em): Response
+    public function register(Event $event, EntityManagerInterface $em, MailerInterface $mailer): Response
     {
 
         $user = $this->getUser();
@@ -141,6 +144,20 @@ final class EventController extends AbstractController
         }else {
             $event->addRegisteredParticipant($user);
             $em->flush();
+
+            $email = (new TemplatedEmail())
+                ->from(new Address('mailer@campus-eni.fr', 'ENI MAIL BOT'))
+                ->to((string) $user->getEmail())
+                ->subject('Test')
+                ->htmlTemplate('event/email.html.twig')
+                ->context([
+                    'event' => $event,
+                    'mode' => 'register'
+                ])
+            ;
+
+            $mailer->send($email);
+
             $this->addFlash('success', 'Vous êtes bien inscrit.e à la sortie!');
         }
 
@@ -148,13 +165,27 @@ final class EventController extends AbstractController
     }
 
     #[Route('/{id}/desinscription', name: '_unregister')]
-    public function unregister(Event $event, EntityManagerInterface $em): Response
+    public function unregister(Event $event, EntityManagerInterface $em, MailerInterface $mailer): Response
     {
         $user = $this->getUser();
         if ($event->getRegisteredParticipants()->contains($user)) {
             $this->addFlash('warning', 'Vous vous êtes bien désinscrit.e de cette sortie.');
             $event->removeRegisteredParticipant($user);
             $em->flush();
+
+            $email = (new TemplatedEmail())
+                ->from(new Address('mailer@campus-eni.fr', 'ENI MAIL BOT'))
+                ->to((string) $user->getEmail())
+                ->subject('Test')
+                ->htmlTemplate('event/email.html.twig')
+                ->context([
+                    'event' => $event,
+                    'mode' => 'unregister'
+                ])
+            ;
+
+            $mailer->send($email);
+
             return $this->redirectToRoute('event_display', ['id' => $event->getId()]);
         }else{
             $this->addFlash('warning', 'Vous n\'êtes pas inscrit.e à cette sortie.');
