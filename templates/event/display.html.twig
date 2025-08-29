@@ -85,9 +85,9 @@
         {% endif %}
 
 
-        {% if app.user %}
 
-            {% if event.state.description == 'Annulée' %}
+        {% if app.user %}
+            {% if state == 'Annulée' %}
                 <button class="btn btn-danger" disabled>
                     Sortie annulée
                 </button>
@@ -95,7 +95,11 @@
                 <button class="btn btn-secondary" disabled>
                     Déjà inscrit
                 </button>
-
+                <form method="post" action="{{ path('event_unregister', {id: event.id}) }}">
+                    <button class="btn btn-danger">
+                        Se désinscrire
+                    </button>
+                </form>
             {% elseif event.registeredParticipants|length >= event.maxParticipants %}
                 <button class="btn btn-danger" disabled>
                     Complet
@@ -105,8 +109,7 @@
                     Date d'inscription dépassée
                 </button>
 
-            {% else %}
-
+            {% elseif state =='Ouverte' %}
                 <form method="post" action="{{ path('event_register', {id: event.id}) }}">
                     <button type="submit" class="btn btn-primary">
                         S'inscrire
@@ -115,11 +118,11 @@
             {% else %}
                 <p>Une erreur est survenue</p>
             {% endif %}
-            {% else %}
-                <a href="{{ path('user_login') }}" class="btn btn-primary">
-                    Connectez-vous pour vous inscrire
-                </a>
-            {% endif %}
+        {% else %}
+            <a href="{{ path('user_login') }}" class="btn btn-primary">
+                Connectez-vous pour vous inscrire
+            </a>
+        {% endif %}
     </div>
 
 {% endblock %}
