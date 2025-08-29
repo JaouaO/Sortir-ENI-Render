@@ -132,49 +132,55 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/profile/{id}/edit', name: '_edit',requirements: ['id' => '\d+'])]
+    #[Route('/profile/{id}/edit', name: '_edit', requirements: ['id' => '\d+'])]
     public function edit(
-        Request $request,
+        Request                $request,
         EntityManagerInterface $em,
-        FileUploader $fileUploader,
-        ParameterbagInterface $parameterBag,
-        Security $security,
+        FileUploader           $fileUploader,
+        ParameterbagInterface  $parameterBag,
+        User                   $userProfile,
+
     ): Response
     {
         /**@var User $user */
-        $user = $security->getUser();
+            $userLogged = $this->getUser();
 
-        $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
+        if ($userLogged !== $userProfile) {
+            $this->addFlash('danger', 'Vous n\'avez pas accès aux modifications.');
+            return $this->redirectToRoute('home');
+        }
+            $form = $this->createForm(RegistrationFormType::class, $userProfile);
+            $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
 
-            $file = $form->get('poster_file')->getData();
-            if ($file instanceof UploadedFile) {
+                $file = $form->get('poster_file')->getData();
+                if ($file instanceof UploadedFile) {
 
-                $dir = $parameterBag->get('photo')['photo_profile'];
-                $name = $fileUploader->upload(
-                    $file,
-                    $user->getPseudo(),
-                    $dir
-                );
-                if($user->getPoster() && file_exists($dir . '/' . $user->getPoster())) {
-                    unlink($dir. '/' . $user->getPoster());
+                    $dir = $parameterBag->get('photo')['photo_profile'];
+                    $name = $fileUploader->upload(
+                        $file,
+                        $userProfile->getPseudo(),
+                        $dir
+                    );
+                    if ($user->getPoster() && file_exists($dir . '/' . $user->getPoster())) {
+                        unlink($dir . '/' . $user->getPoster());
                     }
-                $user->setPoster($name);
+                    $user->setPoster($name);
+                }
+
+                $em->flush();
+                $this->addFlash('success', 'Profil mis à jour !');
+
+                return $this->redirectToRoute('user_edit', ['id' => $userProfile->getId()]);
             }
 
-            $em->flush();
-            $this->addFlash('success', 'Profil mis à jour !');
-
-            return $this->redirectToRoute('user_edit', ['id' => $user->getId()]);
+            return $this->render('user/edit.html.twig', [
+                'form' => $form->createView(),
+                'user' => $userProfile,
+            ]);
         }
 
-        return $this->render('user/edit.html.twig', [
-            'form' => $form->createView(),
-            'user' => $user,
-        ]);
-    }
 
 }
 
