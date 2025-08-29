@@ -17,7 +17,7 @@
 
     {{ form_row(form.poster_file, {label: 'Modifier ma photo' }) }}
 
-    <p> Photo de profil : {{ user.poster }}</p>
+    {# <p> Photo de profil : {{ user.poster }}</p> #}
     {% if user.poster %}
         <img src="{{ asset('uploads/profile/' ~ user.poster) }}" alt="Photo de {{ user.pseudo }}" width="150">
     {% endif %}

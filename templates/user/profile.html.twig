@@ -10,12 +10,12 @@
     <p>Téléphone : {{ user.phone }}</p>
     <p>Email : {{ user.email }}</p>
     <p>Ville de rattachement  : {{ user.site }}</p>
-    <p> Photo de profil : {{ user.poster }}</p>
 
     {% if user.poster %}
         <img src="{{ asset('uploads/profile/' ~ user.poster) }}" alt="Photo de {{ user.pseudo }}" width="150">
     {% endif %}
     <br>
+    <a href="{{ path('user_edit',  { id: user.id })}}" class="btn">Modifier</a>
     <a href="{{ path('home') }}" class="btn">Retour</a>
 
 {% endblock %}
