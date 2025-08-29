@@ -42,11 +42,7 @@ class EventType extends AbstractType
                     'rows' => 5,
                     'placeholder' => 'Ajoutez une description ou des infos utiles sur la sortie'
                 ]])
-            ->add('state', EntityType::class, [
-                'class' => State::class,
-                'choice_label' => 'description',
-                'label' => 'Statut',
-            ])
+
             ->add('site', EntityType::class, [
                 'class' => Site::class,
                 'choice_label' => 'name',
@@ -56,17 +52,6 @@ class EventType extends AbstractType
                 'class' => Place::class,
                 'choice_label' => 'name',
                 'label' => 'Lieu de l\'évènement',
-            ])
-            ->add('registeredParticipants', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'name',
-                'multiple' => true,
-                'expanded' => true,
-            ])
-            ->add('organizer', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'name',
-                'label' => 'Organisateurice',
             ]);
     }
 
