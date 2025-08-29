@@ -18,7 +18,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class EventController extends AbstractController
 {
     #[Route('/creer', name: '_create')]
-    public function create(Request $request, EntityManagerInterface $em): Response
+    #[IsGranted('ROLE_ORGANISATEUR')]
+    public function create(Request $request, EntityManagerInterface $em, StateRepository $stateRepository): Response
     {
         $event = new Event();
 
@@ -27,6 +28,9 @@ final class EventController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $event->setOrganizer($this->getUser());
+            $createdState= $stateRepository->findOneBy(['description'=>'Créée']);
+            $event->setState($createdState);
             $em->persist($event);
             $em->flush();
 
@@ -45,6 +49,10 @@ final class EventController extends AbstractController
     #[IsGranted('ROLE_ORGANISATEUR')]
     public function edit(Event $event, Request $request, EntityManagerInterface $em): Response
     {
+        if($this->getUser() !== $event->getOrganizer() && !$this->isGranted('ROLE_ADMINISTRATEUR')){
+            $this->addFlash('warning', 'Vous ne pouvez pas modifier une sortie dont vous n\'êtes pas l\'organisateurice');
+            return $this->redirectToRoute('home');
+        }
 
         $form = $this->createForm(EventType::class, $event);
 
@@ -55,7 +63,7 @@ final class EventController extends AbstractController
 
             $this->addFlash('success', 'Une sortie à été modifiée avec succès');
 
-            return $this->render('event_display', ['id' => $event->getId()]);
+           return $this->redirectToRoute('event_display', ['id' => $event->getId()]);
         }
 
 
