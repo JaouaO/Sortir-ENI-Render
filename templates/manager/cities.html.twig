@@ -27,8 +27,11 @@
                         <p class="card-text">Code postal : {{ city.postCode }}</p>
                     </div>
                     <div class="buttonAndText">
-                        <button class="btn btn-danger">Supprimer</button>
-                        <button class="btn btn-primary">Modifier</button>
+                        <a href="{{ path('manager_delete', {id: city.id}) }}" class="btn btn-sm btn-danger"
+                           onclick="return confirm('Etes vous sûr de vouloir supprimer cette ville ?')">
+                            Supprimer</a>
+
+                        <button class="btn btn-sm btn-warning">Modifier</button>
                     </div>
                 </div>
             </div>
