@@ -1,169 +1,123 @@
 {% extends 'base.html.twig' %}
 
-    {% block title %}Sortie{% endblock %}
+{% block title %}Sortie{% endblock %}
 
-    {% block body %}
-        <div>
-            <h1>
-                Liste des sorties</h1>
+{% block body %}
+    <div class="container my-4">
+        <h1 class="mb-4">Liste des sorties</h1>
 
-            <!-- Filtres -->
-            <div id="filters">
-                <div>
-                    <h2> Filtrer les sorties</h2>
+        <!-- Filtres -->
+        <div id="filters" class="card mb-4">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Filtrer les sorties</h2>
 
-                    <form method="get"
-                          action="{{ path("home") }}">
-                        <div>
-                            <section>
+                <form method="get" action="{{ path('home') }}">
+                    <div class="row gy-3">
+                        <section class="col-md-5">
 
-                                <!-- Site -->
-                                <label for="siteList">Site :</label>
-                                <select
-                                        name="site" id="siteList">
-                                    <option value="" {% if app.request.query.get('site') == '' %}selected{% endif %}>Tous
-                                    </option>
+                            <!-- Site -->
+                            <div class="mb-3">
+                                <label for="siteList" class="form-label">Site :</label>
+                                <select name="site" id="siteList" class="form-select">
+                                    <option value="" {% if app.request.query.get('site') == '' %}selected{% endif %}>Tous</option>
                                     {% for site in sites %}
-                                        <option value="{{ site.id }}"
-                                                {% if app.request.query.get('site') ==  site.id %}selected{% endif %}>{{ site.name }}</option>
+                                        <option value="{{ site.id }}" {% if app.request.query.get('site') == site.id %}selected{% endif %}>{{ site.name }}</option>
                                     {% endfor %}
                                 </select>
+                            </div>
 
-                                <!-- Recherche -->
-                                <label for="testLabel2" >Le nom de la sortie contient :</label>
-                                <div>
-                                    <input type="search" id="testLabel2" name="search"
-                                           value="{{ app.request.query.get('search') }}" placeholder="Rechercher par nom">
+                            <!-- Recherche -->
+                            <div class="mb-3">
+                                <label for="searchInput" class="form-label">Le nom de la sortie contient :</label>
+                                <input type="search" id="searchInput" name="search" value="{{ app.request.query.get('search') }}" placeholder="Rechercher par nom" class="form-control" />
+                            </div>
+
+                            <!-- Date -->
+                            <div class="mb-3">
+                                <label class="form-label d-block">Entre :</label>
+                                <div class="d-flex align-items-center gap-2">
+                                    <input type="date" name="dateStart" value="{{ app.request.query.get('dateStart') }}" id="date-start" class="form-control" />
+                                    <span>Et</span>
+                                    <input type="date" name="dateEnd" value="{{ app.request.query.get('dateEnd') }}" id="date-end" class="form-control" />
                                 </div>
+                            </div>
+                        </section>
 
-                                <!--  date -->
-                                <label for="date-start">Entre :</label>
-                                <div>
-                                    <input type="date" name="dateStart" value="{{ app.request.query.get('dateStart') }}"
-                                           id="date-start"/>
-                                    <label for="date-end" id="">Et</label>
-                                    <input type="date" name="dateEnd" value="{{ app.request.query.get('dateEnd') }}"
-                                           id="date-end"/>
-                                </div>
-                            </section>
+                        <section class="col-md-4">
 
-                            <section>
+                            <!-- Checkboxes -->
+                            <div class="form-check mb-2">
+                                <input type="checkbox" id="outingOrganizer" name="organizer" class="form-check-input" {% if app.request.query.get('organizer') is not empty %}checked{% endif %} />
+                                <label for="outingOrganizer" class="form-check-label">Sorties dont je suis l'organisateur/trice</label>
+                            </div>
 
-                                <!-- Checkbox -->
-                                <div>
-                                    <input type="checkbox" id="outingOrganizer" name="organizer"
-                                           {% if app.request.query.get('organizer') is not empty %}checked{% endif %} />
-                                    <label for="outingOrganizer">Sorties dont
-                                        je suis l'organisateur/trice</label>
-                                </div>
+                            <div class="form-check mb-2">
+                                <input type="checkbox" id="outingRegistered" name="registered" value="1" class="form-check-input" {% if app.request.get('registered') %}checked{% endif %} />
+                                <label for="outingRegistered" class="form-check-label">Sorties auxquelles je suis inscrit/e</label>
+                            </div>
 
-                                <div>
-                                    <input type="checkbox" id="outingRegistered" name="registered" value="1" {% if app.request.get('registered') %}checked{% endif %}/>
-                                    <label for="outingRegistered">Sorties auxquelles je suis inscrit/e</label>
-                                </div>
+                            <div class="form-check mb-2">
+                                <input type="checkbox" id="outingNotRegistered" name="notRegistered" value="1" class="form-check-input" {% if app.request.get('not_registered') %}checked{% endif %} />
+                                <label for="outingNotRegistered" class="form-check-label">Sorties auxquelles je ne suis pas inscrit/e</label>
+                            </div>
 
-                                <div>
-                                    <input type="checkbox" id="outingNotRegistered" name="notRegistered" value="1" {% if app.request.get('not_registered') %}checked{% endif %}/>
-                                    <label for="outingNotRegistered">Sorties auxquelles je ne suis pas inscrit/e</label>
-                                </div>
+                            <div class="form-check mb-3">
+                                <input type="checkbox" id="outingPast" name="outingPast" class="form-check-input" />
+                                <label for="outingPast" class="form-check-label">Sorties passées</label>
+                            </div>
+                        </section>
+                        <section class="col-md-3">
+                            <!-- Submit -->
+                            <button type="submit" class="btn btn-primary btn-lg">Rechercher</button>
 
-                                <div>
-                                    <input type="checkbox" id="outingPast" name="outingPast"/>
-                                    <label for="outingPast">Sorties
-                                        passées</label>
-                                </div>
-
-                                <!-- Submit -->
-                                <button type="submit">Rechercher
-                                </button>
-
-                            </section>
-                        </div>
-
-
-                    </form>
-                </div>
+                        </section>
+                    </div>
+                </form>
             </div>
+        </div>
 
-
-            <!-- tableau d'events -->
-            <div>
-                <table id="array">
-                    <thead>
+        <!-- tableau d'events -->
+        <div class="table-responsive">
+            <table id="array" class="table table-striped table-bordered table-hover">
+                <thead class="table-light">
+                <tr>
+                    <th scope="col">Nom de la sortie</th>
+                    <th scope="col">Date de la sortie</th>
+                    <th scope="col">Clôture des inscriptions</th>
+                    <th scope="col">Inscrits / Places</th>
+                    <th scope="col">Etat</th>
+                    <th scope="col">Inscrit</th>
+                    <th scope="col">Organisateur</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for event in events %}
                     <tr>
-                        <th scope="col">
-                            Nom de la sortie
-                        </th>
-                        <th scope="col">
-                            Date de la sortie
-                        </th>
-                        <th scope="col">
-                            Clôture des inscriptions
-                        </th>
-                        <th scope="col">
-                            Inscrits / Places
-                        </th>
-                        <th scope="col">
-                            Etat
-                        </th>
-                        <th scope="col">
-                            Inscrit ?
-                        </th>
-                        <th scope="col">
-                            Organisateur
-                        </th>
-                        <th scope="col">
-                            Actions
-                        </th>
+                        <td>{{ event.name }}</td>
+                        <td>{{ event.startDateTime | date("d/m/Y H:i") }}</td>
+                        <td>{{ event.registrationDeadline | date("d/m/Y H:i") }}</td>
+                        <td>{{ nbRegisteredByEvent[event.id] }} / {{ event.maxParticipants }}</td>
+                        <td>{{ event.state.description }}</td>
+                        <td>{{ isUserEventRegistered[event.id] ? 'X' : '' }}</td>
+                        <td>
+                            <a href="{{ path('user_profile', {id: event.organizer.id}) }}">{{ event.organizer.pseudo }}</a>
+                        </td>
+                        <td>
+                            <a href="{{ path('event_display', {id: event.id}) }}" class="btn btn-sm btn-info me-1">Afficher</a>
+                            {% if event.organizer.id == user.id %}
+                                <a href="{{ path('event_edit', {id: event.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
+                            {% endif %}
+
+                        </td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    {% for event in events %}
-
-                        <tr>
-                            <td>
-                                {{ event.name }}
-                            </td >
-                            <td>
-                                {{ event.startDateTime | date("d/m/Y H:i") }}
-                            </td>
-                            <td>
-                                {{ event.registrationDeadline | date("d/m/Y H:i") }}
-                            </td>
-                            <td>
-                                  {{ nbRegisteredByEvent[event.id] }} / {{ event.maxParticipants }}
-                            </td>
-                            <td>
-                                 {{ event.state.description }}
-                            </td>
-                            <td>
-                            {{ isUserEventRegistered[event.id] ? 'inscrit' : '' }}
-                            </td>
-                            <td>
-                                <a href="{{ path('user_profile', {id: event.organizer.id}) }}">{{event.organizer.pseudo}}</a>
-                            </td>
-                            <td>
-                                 <a href="{{ path('event_display', {id: event.id}) }}">Afficher</a>
-                                <a href="{{ path('event_edit', {id: event.id}) }}">Modifier</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-
-            </div>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
 
-        <div>
-            <a  href="{{ path('event_create') }}">
-                <button type="button">
-                    Créer une sortie
-                </button>
-            </a>
-
+        <div class="mt-3">
+            <a href="{{ path('event_create') }}" class="btn btn-success">Créer une sortie</a>
         </div>
-
-
-    {% endblock %}
-
-
+    </div>
+{% endblock %}

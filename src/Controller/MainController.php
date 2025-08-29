@@ -60,6 +60,7 @@ final class MainController extends AbstractController
 
 
         return $this->render('main/index.html.twig', [
+            'user' => $user,
             'events' => $events,
             'sites' => $sites,
             'nbRegisteredByEvent' => $nbRegisteredByEvent,
