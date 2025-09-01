@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Site;
+use App\Entity\User;
 use App\Repository\EventRepository;
 use App\Repository\SiteRepository;
 use App\Service\EventService;
@@ -30,6 +31,11 @@ final class MainController extends AbstractController
     public function index(Request $request): Response
     {
         $user = $this->getUser(); //connected user
+
+        if(!$user){
+            $user= new  User();
+        }
+
         $nbRegisteredByEvent = [];
         $isUserEventRegistered = [];
 
