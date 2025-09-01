@@ -31,7 +31,10 @@
                            onclick="return confirm('Etes vous sûr de vouloir supprimer cette ville ?')">
                             Supprimer</a>
 
-                        <button class="btn btn-sm btn-warning">Modifier</button>
+
+                        <a href="{{ path('manager_update', {id: city.id}) }}" class="btn btn-sm btn-warning"
+{#                           onclick="return confirm('Etes vous sûr de vouloir supprimer cette ville ?')"#}
+                        >Modifier</a>
                     </div>
                 </div>
             </div>
