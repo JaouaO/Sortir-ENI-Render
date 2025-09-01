@@ -123,7 +123,7 @@
                 <p>Une erreur est survenue</p>
             {% endif %}
 
-            {% if is_granted('ROLE_ORGANISATEUR') and state != 'Annulée' and app.user == event.organizer %}
+            {% if is_granted('ROLE_ORGANISATEUR') and state != 'Annulée' and app.user == event.organizer or is_granted('ROLE_ADMINISTRATEUR') %}
                 <form method="post" action="{{ path('event_cancel', {id: event.id}) }}" class="d-inline">
                     <button class="btn btn-danger">
                         Annuler la sortie
