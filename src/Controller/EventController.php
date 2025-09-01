@@ -89,23 +89,27 @@ final class EventController extends AbstractController
         $form->handleRequest($request);
 
         if ($event->getStartDateTime() < new \DateTime()) {
-            $this->addFlash('danger', 'Impossible de supprimer la sortie, elle a déjà débuté');
+            $this->addFlash('danger', 'Impossible d\'annuler la sortie, elle a déjà débuté');
             return $this->redirectToRoute('home');
         }
 
-        $cancelState = $stateRepository->findOneBy(['description' => 'Annulée']);
-        if (!$cancelState) {
-            $this->addFlash('danger', 'L\'état "Annulée" n\'a pas été trouvé. L\'opération a échoué.');
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $cancelState = $stateRepository->findOneBy(['description' => 'Annulée']);
+            if (!$cancelState) {
+                $this->addFlash('danger', 'L\'état "Annulée" n\'a pas été trouvé. L\'opération a échoué.');
+                return $this->redirectToRoute('home');
+            }
+            $event->setState($cancelState);
+
+            $em->flush();
+
+            $this->addFlash('success', 'La sortie a été annulée avec succès.');
+
             return $this->redirectToRoute('home');
         }
 
-        $event->setState($cancelState);
-
-        $em->flush();
-
-        $this->addFlash('success', 'La sortie a été annulée avec succès.');
-
-        return $this->redirectToRoute('home');
 
         return $this->render('event/cancel.html.twig', [
             'event' => $event,
