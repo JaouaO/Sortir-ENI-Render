@@ -29,36 +29,37 @@ final class ManagerController extends AbstractController
         ]);
     }
 
-//    #[Route('/{id}/creer', name: '_create', requirements: ['id' => '\d+'])]
-//    public function createCity(
-//        CityRepository $cityRepository,
-//        Request $request,
-//        City $city,
-//        EntityManagerInterface $em,
-//    ): Response {
-//
-//        if ($request->isMethod('POST')) {
-//            $town = $request->request->get('town');
-//            $cp = $request->request->get('cp');
-//
-//            $city->setName($town);
-//            $city->setPostCode($cp);
-//
-//            $em->persist($city);
-//            $em->flush();
-//
-//            $this->addFlash('success', "La ville {$city->getName()} a été modifié");
-//            return $this->redirectToRoute('manager_cities');
-//        }
-//
-//        $cities = $cityRepository->findAll();
-//
-//        return $this->render('manager/update-city.html.twig', [
-//            'mode' => 'create',
-//            'cities' => $cities,
-//            'city' => $city, // Pour pré-remplir le formulaire
-//        ]);
-//    }
+    #[Route('/creer', name: '_create')]
+    public function createCity(
+        CityRepository $cityRepository,
+        Request $request,
+        EntityManagerInterface $em,
+    ): Response {
+
+            $city = new City();
+
+        if ($request->isMethod('POST')) {
+            $town = $request->request->get('town');
+            $cp = $request->request->get('cp');
+
+            $city->setName($town);
+            $city->setPostCode($cp);
+
+            $em->persist($city);
+            $em->flush();
+
+            $this->addFlash('success', "La ville {$city->getName()} a été ajouté");
+            return $this->redirectToRoute('manager_cities');
+        }
+
+        $cities = $cityRepository->findAll();
+
+        return $this->render('manager/update-city.html.twig', [
+            'mode' => 'create',
+            'cities' => $cities,
+            'city' => $city, // Pour pré-remplir le formulaire
+        ]);
+    }
 
 
 
