@@ -3,28 +3,26 @@
 {% block title %}Gestion{% endblock %}
 
 {% block body %}
+
+
+
     {% if mode == 'update' %}
     <h1>Modifier une ville</h1>
     {% else %}
     <h1>Ajouter une ville</h1>
     {% endif %}
 
-    {% if mode == 'create' %}
-
-    {% endif %}
-
-    <form method="post">
+    <form method="post" data-turbo="false">
         <div class="mb-3">
             <label for="town" class="form-label">Ville</label>
             <input type="text" id="town" name="town" value="{{ city.name }}" class="form-control">
         </div>
-
         <div class="mb-3">
             <label for="cp" class="form-label">Code postal</label>
             <input type="text" id="cp" name="cp" value="{{ city.postCode }}" class="form-control">
         </div>
         {% if mode == 'update' %}
-        <button type="submit" class="btn btn-primary">Modifier</button>
+            <button type="submit" class="btn btn-primary">Modifier</button>
         {% else %}
             <button type="submit" class="btn btn-primary">Ajouter</button>
         {% endif %}
