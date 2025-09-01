@@ -21,13 +21,13 @@ class CityRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('c');
 
         // expr() permet de générer des requètes tel que LIKE, AND, OR, BETWEEN
+
         if ($searchTerm) {
-            if ($searchTerm) {
-                $qb->where($qb->expr()->like('c.name', ':term'))
-                    ->orWhere($qb->expr()->like('c.postCode', ':term'))
-                    ->setParameter('term', '%' . $searchTerm . '%');
-            }
+            $qb->where($qb->expr()->like('c.name', ':term'))
+                ->orWhere($qb->expr()->like('c.postCode', ':term'))
+                ->setParameter('term', '%' . $searchTerm . '%');
         }
+
         return $qb->getQuery()->getResult();
     }
 
