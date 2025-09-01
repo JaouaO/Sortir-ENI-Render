@@ -316,6 +316,8 @@
             "./config/packages/webpack_encore.yaml",
             "./package.json",
             "./webpack.config.js"
+            ]
+            },
     "symfonycasts/reset-password-bundle": {
         "version": "1.23",
         "recipe": {
