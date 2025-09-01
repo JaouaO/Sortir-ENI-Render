@@ -2,12 +2,25 @@
 
 {% block title %}Sortie{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <link rel="stylesheet" href="{{ asset('build/app.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+{% endblock %}
+
 {% block body %}
+
+
     <h1>Page de sortie de {{ event.id }}</h1>
 
     <div class="container">
         <h1>Afficher une sortie</h1>
         <div class="row">
+            <!-- Colonne gauche : infos générales -->
             <div class="col-md-6">
                 <dl class="row event-info">
                     <dt class="col-sm-5">Nom de la sortie :</dt>
@@ -30,68 +43,74 @@
                 </dl>
             </div>
 
+            <!-- Colonne droite : carte + participants -->
             <div class="col-md-6">
-                <dl class="row event-info">
-                    <dt class="col-sm-5">Ville organisatrice :</dt>
-                    <dd class="col-sm-7">{{ event.place.city.name }}</dd>
+                <!-- Carte -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">Localisation</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="map" style="height: 300px; width: 100%;"></div>
+                    </div>
+                </div>
 
-                    <dt class="col-sm-5">Lieu :</dt>
-                    <dd class="col-sm-7">{{ event.site.name }}</dd>
-
-                    <dt class="col-sm-5">Rue :</dt>
-                    <dd class="col-sm-7">{{ event.place.name }}</dd>
-
-                    <dt class="col-sm-5">Code postal :</dt>
-                    <dd class="col-sm-7">{{ event.place.city.postCode }}</dd>
-
-                    <dt class="col-sm-5">Latitude :</dt>
-                    <dd class="col-sm-7">{{ event.place.latitude }}</dd>
-
-                    <dt class="col-sm-5">Longitude :</dt>
-                    <dd class="col-sm-7">{{ event.place.longitude }}</dd>
-                </dl>
+                <!-- Participants -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0">Participants inscrits</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive participants-table">
+                            <table class="table table-striped table-bordered mb-0">
+                                <thead>
+                                <tr>
+                                    <th>Pseudo</th>
+                                    <th>Nom</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for participant in event.registeredParticipants %}
+                                    <tr>
+                                        <td>
+                                            <a class="link-body-emphasis link-underline-opacity-0"
+                                               href="{{ path('user_profile',{'id': participant.id }) }}">
+                                                {{ participant.pseudo }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a class="link-body-emphasis link-underline-opacity-0"
+                                               href="{{ path('user_profile',{'id': participant.id }) }}">
+                                                {{ participant.name }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="2" class="text-center text-muted">
+                                            Pas de participants
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <h3>Liste des participants inscrits :</h3>
-        <div class="table-responsive participants-table">
-            <table class="table table-striped table-bordered">
-                <thead>
-                <tr>
-                    <th>Pseudo</th>
-                    <th>Nom</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for participant in event.registeredParticipants %}
-                    <tr>
-                        <td><a class="link-body-emphasis link-underline-opacity-0"
-                               href="{{ path('user_profile',{'id': participant.id }) }}">{{ participant.pseudo }}</a>
-                        </td>
-                        <td><a class="link-body-emphasis link-underline-opacity-0"
-                               href="{{ path('user_profile',{'id': participant.id }) }}">{{ participant.name }}</a></td>
-                    </tr>
-                {% else %}
-                    <p>pas de participants</p>
-                {% endfor %}
-                </tbody>
-            </table>
         </div>
 
         {% if state == 'Annulée' %}
             <dt class="col-sm-5">Raison de l'annulation :</dt>
             <dd class="col-sm-7">{{ event.cancelReason }}</dd>
-
         {% endif %}
 
-
-
+        {# Boutons d’action #}
         {% if app.user %}
             {% if state == 'Annulée' %}
                 <button class="btn btn-danger" disabled>
                     Sortie annulée
                 </button>
-
             {% elseif event.registeredParticipants.contains(app.user) %}
                 <button class="btn btn-secondary" disabled>
                     Déjà inscrit
@@ -101,24 +120,20 @@
                         Se désinscrire
                     </button>
                 </form>
-
             {% elseif event.registeredParticipants|length >= event.maxParticipants %}
                 <button class="btn btn-danger" disabled>
                     Complet
                 </button>
-
             {% elseif event.registrationDeadline <date('now') %}
                 <button class="btn btn-danger" disabled>
                     Date d'inscription dépassée
                 </button>
-
             {% elseif state =='Ouverte' %}
                 <form method="post" action="{{ path('event_register', {id: event.id}) }}">
                     <button type="submit" class="btn btn-primary">
                         S'inscrire
                     </button>
                 </form>
-
             {% else %}
                 <p>Une erreur est survenue</p>
             {% endif %}
@@ -130,12 +145,144 @@
                     </button>
                 </form>
             {% endif %}
-
         {% else %}
             <a href="{{ path('user_login') }}" class="btn btn-primary">
                 Connectez-vous pour vous inscrire
             </a>
         {% endif %}
     </div>
+
+
+    <script>// Déclarer les variables en dehors de la fonction pour qu'elles soient accessibles globalement
+        let map = null;
+        let marker = null;
+
+        function initializeMap() {
+            console.log("Initialisation de la carte...");
+
+            // Réinitialiser les variables si elles existent déjà
+            if (map) {
+                map.remove();
+                map = null;
+            }
+            marker = null;
+
+            // Vérifier que Leaflet est chargé
+            if (typeof L === 'undefined') {
+                console.error("Leaflet n'est pas chargé!");
+                return;
+            }
+
+            // Vérifier que le conteneur de la carte existe
+            const mapContainer = document.getElementById('map');
+            if (!mapContainer) {
+                console.error("Conteneur de carte non trouvé!");
+                return;
+            }
+
+            // Créer la carte
+            map = L.map('map').setView([47.2184, 1.6536], 6);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+
+            let lat = {{ event.place.latitude }};
+            let lng = {{ event.place.longitude }};
+
+            marker = L.marker([lat, lng]).addTo(map);
+            map.setView([lat, lng], 15);
+
+        }
+
+        // Nettoyer la carte avant la navigation Turbo
+        function cleanupMap() {
+            if (map) {
+                map.remove();
+                map = null;
+            }
+            marker = null;
+            placeSelect = null;
+            streetWrapper = null;
+        }
+
+        // Écouter les événements Turbo
+        document.addEventListener('turbo:load', function() {
+            console.log('Turbo load - initialisation de la carte');
+            initializeMap();
+        });
+
+        document.addEventListener('turbo:render', function() {
+            console.log('Turbo render - réinitialisation de la carte');
+            initializeMap();
+        });
+
+        document.addEventListener('turbo:before-visit', function() {
+            console.log('Turbo before-visit - nettoyage de la carte');
+            cleanupMap();
+        });
+
+        document.addEventListener('turbo:before-render', function() {
+            console.log('Turbo before-render - nettoyage de la carte');
+            cleanupMap();
+        });
+
+        // Écouter aussi l'événement DOMContentLoaded pour les navigations normales
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMContentLoaded - initialisation de la carte');
+            initializeMap();
+        });
+
+        // Gérer le démontage lorsque la page est quittée
+        document.addEventListener('turbo:before-cache', function() {
+            console.log('Turbo before-cache - nettoyage de la carte');
+            cleanupMap();
+        });
+    </script>
+
+    <script>
+        // SOLUTION ULTRA-SIMPLE - Forcer le rechargement si nécessaire
+        function checkAndInitMap() {
+            if (typeof L === 'undefined') {
+                console.log("Leaflet non chargé, rechargement de la page");
+                window.location.reload();
+                return;
+            }
+
+            const mapElement = document.getElementById('map');
+            if (!mapElement) return;
+
+            // Vérifier si la carte est déjà affichée
+            if (mapElement.innerHTML.includes('leaflet')) {
+                console.log("Carte déjà affichée");
+                return;
+            }
+
+            try {
+                const lat = {{ event.place.latitude }};
+                const lng = {{ event.place.longitude }};
+
+                const map = L.map('map').setView([lat, lng], 15);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+                L.marker([lat, lng]).addTo(map)
+                    .bindPopup("<strong>{{ event.place.name|escape('js') }}</strong>")
+                    .openPopup();
+
+                console.log("Carte affichée avec succès");
+
+            } catch (error) {
+                console.error("Erreur:", error);
+                // Forcer le rechargement en cas d'erreur
+                setTimeout(() => window.location.reload(), 1000);
+            }
+        }
+
+        // Essayer immédiatement, puis toutes les secondes
+        checkAndInitMap();
+        setInterval(checkAndInitMap, 1000);
+
+        // aussi au clic
+        document.addEventListener('click', checkAndInitMap);
+    </script>
 
 {% endblock %}
