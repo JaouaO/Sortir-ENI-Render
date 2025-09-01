@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Importer des utilisateurs</h1>
+
+    {{ form_start(form) }}
+    {{ form_row(form.csvFile) }}
+    <button class="btn btn-primary">Importer</button>
+    {{ form_end(form) }}
+
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-success mt-3">{{ message }}</div>
+        {% endfor %}
+    {% endfor %}
+{% endblock %}
