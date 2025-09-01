@@ -14,10 +14,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/gestion', name: 'manager')]
+#[IsGranted('ROLE_ADMINISTRATEUR')]
 final class ManagerController extends AbstractController
 {
     #[Route('/villes', name: '_cities', methods: ['GET'])]
-    //#[IsGranted('ROLE_ADMINISTRATEUR')]
     public function cities(CityRepository $cityRepository, Request $request): Response
     {
         $searchTerm = $request->query->get('search');
@@ -42,14 +42,23 @@ final class ManagerController extends AbstractController
             $town = $request->request->get('town');
             $cp = $request->request->get('cp');
 
-            $city->setName($town);
-            $city->setPostCode($cp);
+            if (empty($town)) {
+                $this->addFlash('error', "Le nom de la ville est obligatoire.");
+            } elseif (empty($cp)) {
+                $this->addFlash('error', "Le code postal est obligatoire.");
+            } elseif (!preg_match('/^\d{5}$/', $cp)) {
+                $this->addFlash('error', "Le code postal doit comporter 5 chiffres.");
+            } else {
 
-            $em->persist($city);
-            $em->flush();
+                $city->setName($town);
+                $city->setPostCode($cp);
 
-            $this->addFlash('success', "La ville {$city->getName()} a été ajouté");
-            return $this->redirectToRoute('manager_cities');
+                $em->persist($city);
+                $em->flush();
+
+                $this->addFlash('success', "La ville {$city->getName()} a été ajoutée");
+                return $this->redirectToRoute('manager_cities');
+            }
         }
 
         $cities = $cityRepository->findAll();
@@ -60,8 +69,6 @@ final class ManagerController extends AbstractController
             'city' => $city, // Pour pré-remplir le formulaire
         ]);
     }
-
-
 
     #[Route('/{id}/modifier', name: '_update', requirements: ['id' => '\d+'])]
     public function updateCity(
@@ -75,15 +82,24 @@ final class ManagerController extends AbstractController
             $town = $request->request->get('town');
             $cp = $request->request->get('cp');
 
+            if (empty($town)) {
+                $this->addFlash('error', "Le nom de la ville est obligatoire.");
+            } elseif (empty($cp)) {
+                $this->addFlash('error', "Le code postal est obligatoire.");
+            } elseif (!preg_match('/^\d{5}$/', $cp)) {
+                $this->addFlash('error', "Le code postal doit comporter 5 chiffres.");
+            } else {
+
                 $city->setName($town);
                 $city->setPostCode($cp);
 
                 $em->persist($city);
                 $em->flush();
 
-                $this->addFlash('success', "La ville {$city->getName()} a été modifié");
+                $this->addFlash('success', "La ville {$city->getName()} a été ajoutée");
                 return $this->redirectToRoute('manager_cities');
             }
+        }
 
         $cities = $cityRepository->findAll();
 
@@ -93,8 +109,6 @@ final class ManagerController extends AbstractController
             'city' => $city, // Pour pré-remplir le formulaire
         ]);
     }
-
-
 
     #[Route('//{id}/supprimer', name: '_delete', requirements: ['id' => '\d+'])]
     public function deleteCity(int $id, EntityManagerInterface $em): Response {
@@ -114,8 +128,10 @@ final class ManagerController extends AbstractController
     }
 
 
+
+
+
     #[Route('/sites', name: '_places')]
-    //#[IsGranted('ROLE_ADMINISTRATEUR')]
     public function places(): Response
     {
         return $this->render('manager/places.html.twig');
