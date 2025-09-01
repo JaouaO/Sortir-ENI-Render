@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Event;
+use App\Entity\Place;
 use App\Form\EventCancelType;
 use App\Form\EventType;
 use App\Repository\EventRepository;
@@ -34,6 +35,25 @@ final class EventController extends AbstractController
             $event->setOrganizer($this->getUser());
             $createdState= $stateRepository->findOneBy(['description'=>'Créée']);
             $event->setState($createdState);
+
+            $newPlaceName = $form->get('newPlace')->getData();
+            $newPlaceStreet = $form->get('newPlaceStreet')->getData();
+            $newPlaceCity = $form->get('newPlaceCity')->getData();
+            $newPlaceLat = $form->get('newPlaceLat')->getData();
+            $newPlaceLng = $form->get('newPlaceLng')->getData();
+
+            if ($newPlaceName && $newPlaceLat && $newPlaceLng) {
+                $place = new Place();
+                $place->setName($newPlaceName)
+                    ->setStreet($newPlaceStreet)
+                    ->setCity($newPlaceCity)
+                    ->setLatitude((float)$newPlaceLat)
+                    ->setLongitude((float)$newPlaceLng);
+                $em->persist($place);
+                $event->setPlace($place);
+            }
+
+
             $em->persist($event);
             $em->flush();
 
@@ -62,6 +82,25 @@ final class EventController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $newPlaceName = $form->get('newPlace')->getData();
+            $newPlaceStreet = $form->get('newPlaceStreet')->getData();
+            $newPlaceCity = $form->get('newPlaceCity')->getData();
+            $newPlaceLat = $form->get('newPlaceLat')->getData();
+            $newPlaceLng = $form->get('newPlaceLng')->getData();
+
+            if ($newPlaceName && $newPlaceLat && $newPlaceLng) {
+                $place = new Place();
+                $place->setName($newPlaceName)
+                    ->setStreet($newPlaceStreet)
+                    ->setCity($newPlaceCity)
+                    ->setLatitude((float)$newPlaceLat)
+                    ->setLongitude((float)$newPlaceLng);
+                $em->persist($place);
+                $event->setPlace($place);
+            }
+
+
             $em->flush();
 
             $this->addFlash('success', 'Une sortie à été modifiée avec succès');

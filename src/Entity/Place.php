@@ -6,6 +6,8 @@ use App\Repository\PlaceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PlaceRepository::class)]
 class Place
@@ -136,4 +138,18 @@ class Place
 
         return $this;
     }
+    #[Assert\Callback]
+    public function validate(ExecutionContextInterface $context): void
+    {
+        if ($this->latitude === null || $this->longitude === null) {
+            $context->buildViolation('Vous devez sélectionner un emplacement sur la carte.')
+                ->atPath('latitude') // tu peux aussi mettre 'longitude' ou les deux
+                ->addViolation();
+        }
+
+
+    }
+
+
+
 }

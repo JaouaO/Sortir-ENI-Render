@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>{% block title %}Welcome World ! La dream team du fond 2 est présente{% endblock %}</title>
     <link rel="icon" href="{{ asset('images/ENI.svg') }}">
+
     {% block stylesheets %}
     {% endblock %}
 
@@ -36,7 +37,7 @@
                     </li>
                 {% endif %}
 
-                {%  if is_granted('ROLE_ORGANISATEUR') %}
+                {% if is_granted('ROLE_ORGANISATEUR') %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('event_create') }}">Créer une sortie</a>
                     </li>
@@ -60,6 +61,8 @@
 
 
             </ul>
+        </div>
+    </div>
 </nav>
 
 
