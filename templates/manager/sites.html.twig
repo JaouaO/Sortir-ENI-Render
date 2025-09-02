@@ -1,48 +1,36 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gestion{% endblock %}
+{% block title %}Gestion des campus{% endblock %}
 
 {% block body %}
-    <h1 class="mt-4 mb-4">Gestion des campus</h1>
+    <div class="registration-container">
+        <div class="registration-card">
+            <h1 class="text-center mb-4">Gestion des campus</h1>
 
-    <h3 class="mb-3">Filtrer les campus</h3>
-    <div class="row">
-        <div class="col-md-6">
-            <form method="get" action="{{ path('manager_sites') }}" class="d-flex">
-                <div class="input-group">
-                    <label for="search" class="input-group-text">Trouver un campus</label>
-                    <input type="text" id="search" name="search" class="form-control" placeholder="Entrez le nom du campus">
-                    <button type="submit" class="btn btn-primary">Rechercher</button>
+            <form method="get" action="{{ path('manager_sites') }}" class="mb-4">
+                <div class="mb-3">
+                    <label for="search">Trouver un campus</label>
+                    <input type="text" id="search" name="search" class="form-control" placeholder="Entrez le nom du campus" value="{{ app.request.query.get('search') }}">
                 </div>
+                <button type="submit" class="btn btn-primary">Rechercher</button>
             </form>
+
+            <a href="{{ path('manager_create_site') }}" class="btn btn-primary mb-4">Ajouter un campus</a>
+
+            {% for site in sites %}
+                <div class="card mb-3">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">{{ site.name }}</h5>
+                        <div class="d-flex gap-2">
+                            <a href="{{ path('manager_update_site', {id: site.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
+                            <a href="{{ path('manager_delete_site', {id: site.id}) }}" class="btn btn-sm btn-danger"
+                               onclick="return confirm('Etes vous sûr de vouloir supprimer ce campus ?')">Supprimer</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-center text-muted">Aucun campus trouvé.</p>
+            {% endfor %}
         </div>
     </div>
-
-    <br>
-    <div>
-        <a href="{{ path('manager_create_site') }}" class="btn btn-primary">Ajouter un campus</a>
-    </div>
-
-
-    <div class="mt-4">
-        {% for site in sites %}
-            <div class="card mb-2">
-                <div class="card-body">
-                    <div class="buttonAndText">
-                        <h5 class="card-title">{{ site.name }}</h5>
-                    </div>
-                    <div class="buttonAndText">
-                        <a href="{{ path('manager_delete_site', {id: site.id}) }}" class="btn btn-sm btn-danger"
-                           onclick="return confirm('Etes vous sûr de vouloir supprimer ce campus ?')">
-                            Supprimer</a>
-
-
-                        <a href="{{ path('manager_update_site', {id: site.id}) }}" class="btn btn-sm btn-warning"
-                        >Modifier</a>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-
 {% endblock %}
