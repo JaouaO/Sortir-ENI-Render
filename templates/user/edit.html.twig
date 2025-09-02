@@ -3,30 +3,31 @@
 {% block title %}Profil{% endblock %}
 
 {% block body %}
-    <h1>Modification du profil de {{ user.pseudo }}</h1>
-<div class="row-justify-content-center">
-    {{ form_start(form) }}
+    <div class="profile-container">
+        <div class="profile-card">
+            <h1>Modification du profil de {{ user.pseudo }}</h1>
 
-    {{ form_row(form.pseudo, {label: 'Pseudo' }) }}
-    {{ form_row(form.firstName, {label: 'Prénom' }) }}
-    {{ form_row(form.name, {label: 'Nom' }) }}
-    {{ form_row(form.phone, {label: 'Téléphone' }) }}
-    {{ form_row(form.email, {label: 'Email' }) }}
+            {{ form_start(form) }}
 
-    {{ form_row(form.site, {label: 'Ville de rattachement' }) }}
+            {{ form_row(form.pseudo, {label: 'Pseudo' }) }}
+            {{ form_row(form.firstName, {label: 'Prénom' }) }}
+            {{ form_row(form.name, {label: 'Nom' }) }}
+            {{ form_row(form.phone, {label: 'Téléphone' }) }}
+            {{ form_row(form.email, {label: 'Email' }) }}
+            {{ form_row(form.site, {label: 'Ville de rattachement' }) }}
+            {{ form_row(form.poster_file, {label: 'Modifier ma photo' }) }}
 
-    {{ form_row(form.poster_file, {label: 'Modifier ma photo' }) }}
+            {% if user.poster %}
+                <div class="profile-image">
+                    <img src="{{ asset('uploads/profile/' ~ user.poster) }}" alt="Photo de {{ user.pseudo }}">
+                </div>
+            {% endif %}
 
+            {% if user.id %}
+                <button type="submit" class="btn-edit">Enregistrer les modifications</button>
+            {% endif %}
 
-    {% if user.poster %}
-        <img src="{{ asset('uploads/profile/' ~ user.poster) }}" alt="Photo de {{ user.pseudo }}" width="150">
-    {% endif %}
-    <br>
-    <br>
-    {% if user.id %}
-    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
-    {% endif %}
-</div>
-
-    {{ form_end(form, { 'render_rest': false }) }}
+            {{ form_end(form, { 'render_rest': false }) }}
+        </div>
+    </div>
 {% endblock %}

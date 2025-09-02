@@ -1,6 +1,12 @@
 body {
-    padding: 20px;
+    margin: 0;
+
 }
+
+.custom-navbar {
+    background-color: #708980;
+}
+
 .event-info dt {
     font-weight: bold;
 }
@@ -21,9 +27,10 @@ body {
 .navbar-brand {
     font-weight: bold;
     font-size: 1.5rem;
+
 }
 .sortir-logo {
-    color: #4e73df;
+    color: white;
 }
 
 form .form-group label {
@@ -46,4 +53,172 @@ form .form-group label {
 .buttonAndText h5 p {
     margin: 0;
 }
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    background-color: #708980;
+}
+
+                                /* CSS Profil */
+/* Conteneur principal centré */
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 80vh; /* prend presque toute la hauteur */
+    padding: 2rem;
+    background-color: #f9f9f9; /* fond clair */
+}
+
+/* Carte profil */
+.profile-card {
+    max-width: 600px;
+    width: 100%;
+    background: white;
+    padding: 1rem;
+    /*border-radius: 12px;*/
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+/* Titre */
+.profile-card h1 {
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+/* Texte */
+.profile-card p {
+    margin: 0.5rem 0;
+    font-size: 1.1rem;
+    color: #555;
+}
+
+/* Image */
+.profile-image img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin: 1rem 0;
+    border: 3px solid #708980; /* rappel de ta couleur */
+}
+
+/* Bouton */
+.btn-edit {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.7rem 1.5rem;
+    background-color: #708980;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: background 0.3s;
+}
+
+.btn-edit:hover {
+    background-color: #556963;
+}
+
+
+/* CSS edit profil */
+/* Conteneur principal centré */
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 80vh;
+    padding: 2rem;
+    background-color: #f9f9f9;
+}
+
+/* Carte */
+.profile-card {
+    max-width: 600px;
+    width: 100%;
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Titre */
+.profile-card h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+/* Champs du formulaire */
+.profile-card form div {
+    margin-bottom: 1rem;
+}
+
+/* Labels */
+.profile-card label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: bold;
+    color: #555;
+}
+
+/* Inputs */
+.profile-card input,
+.profile-card select,
+.profile-card textarea {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border 0.2s;
+}
+
+.profile-card input:focus,
+.profile-card select:focus,
+.profile-card textarea:focus {
+    border-color: #708980;
+    outline: none;
+}
+
+/* Image */
+.profile-image {
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.profile-image img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #708980;
+}
+
+/* Bouton */
+.btn-edit {
+    display: block;
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 1rem;
+    background-color: #708980;
+    color: white;
+    border: none;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-edit:hover {
+    background-color: #556963;
+}
+
 

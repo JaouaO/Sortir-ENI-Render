@@ -1,39 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="container mt-4">
-        <h1>Importer des utilisateurs</h1>
+    <h1>Importer des utilisateurs</h1>
 
-        {# Instructions simples #}
-        <div class="alert alert-info">
-            <strong>Format CSV requis :</strong><br>
-            <code>email;pseudo;name;firstName;phone;roles;password;isAdmin;isActive;site</code>
-        </div>
+    {{ form_start(form) }}
+    {{ form_row(form.csvFile) }}
+    <button class="btn btn-primary">Importer</button>
+    {{ form_end(form) }}
 
-        {# Formulaire #}
-        <div class="card">
-            <div class="card-body">
-                {{ form_start(form) }}
-                {{ form_row(form.csvFile, {'attr': {'accept': '.csv'}}) }}
-                <button type="submit" class="btn btn-primary">Importer</button>
-                {{ form_end(form) }}
-            </div>
-        </div>
-
-        {# Messages #}
-        {% for label, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="alert alert-{{ label == 'error' ? 'danger' : 'success' }} mt-3">
-                    {{ message }}
-                </div>
-            {% endfor %}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-success mt-3">{{ message }}</div>
         {% endfor %}
-
-        {# Exemple simple #}
-        <details class="mt-3">
-            <summary>Voir un exemple</summary>
-            <pre class="mt-2 p-2 bg-light">email;pseudo;name;firstName;phone;roles;password;isAdmin;isActive;site
-john@test.com;john;Doe;John;0123456789;ROLE_USER;;0;1;Paris</pre>
-        </details>
-    </div>
+    {% endfor %}
 {% endblock %}
