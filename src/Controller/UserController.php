@@ -140,8 +140,6 @@ final class UserController extends AbstractController
         FileUploader           $fileUploader,
         ParameterbagInterface  $parameterBag,
         User                   $userProfile,
-        AdminController        $admin,
-
     ): Response
     {
 
@@ -177,7 +175,7 @@ final class UserController extends AbstractController
             $em->flush();
             $this->addFlash('success', 'Profil mis à jour !');
 
-            return $this->redirectToRoute('user_edit', ['id' => $userProfile->getId()]);
+            return $this->redirectToRoute('user_profile', ['id' => $userProfile->getId()]);
         }
 
         return $this->render('user/edit.html.twig', [
