@@ -3,10 +3,34 @@
 {% block body %}
     <h1>Importer des utilisateurs</h1>
 
-    {{ form_start(form) }}
+    {{ form_start(form, { attr: { 'data-turbo': 'false' } }) }}
     {{ form_row(form.csvFile) }}
-    <button class="btn btn-primary">Importer</button>
+
+    <button type="submit" name="preview" class="btn btn-secondary">Prévisualiser</button>
+    <button type="submit" name="import" class="btn btn-primary">Importer</button>
     {{ form_end(form) }}
+
+    {% if previewUsers is defined and previewUsers is not empty %}
+        <h2 class="mt-4">Prévisualisation</h2>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                {% for key in previewUsers[0]|keys %}
+                    <th>{{ key }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in previewUsers %}
+                <tr>
+                    {% for value in row %}
+                        <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 
     {% for label, messages in app.flashes %}
         {% for message in messages %}
