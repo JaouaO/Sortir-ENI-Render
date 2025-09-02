@@ -121,7 +121,8 @@ final class EventController extends AbstractController
         Event                  $event,
         Request                $request,
         EntityManagerInterface $em,
-        StateRepository        $stateRepository
+        StateRepository        $stateRepository,
+        MailerInterface         $mailer
     ): Response
     {
         $form = $this->createForm(EventCancelType::class, $event);
@@ -143,6 +144,23 @@ final class EventController extends AbstractController
             $event->setState($cancelState);
 
             $em->flush();
+
+            foreach ($event->getRegisteredParticipants() as $participant) {
+                $email = (new TemplatedEmail())
+                    ->from(new Address('mailer@campus-eni.fr', 'ENI MAIL BOT'))
+                    ->to((string) $participant->getEmail())
+                    ->subject('Annulation')
+                    ->htmlTemplate('email/cancel.html.twig')
+                    ->context([
+                        'event' => $event,
+                        'user' => $participant,
+                        'cancelReason' => $form->get('cancelReason')->getData(),
+                    ])
+                ;
+
+                $mailer->send($email);
+            }
+
 
             $this->addFlash('success', 'La sortie a été annulée avec succès.');
 
@@ -195,7 +213,7 @@ final class EventController extends AbstractController
             $email = (new TemplatedEmail())
                 ->from(new Address('mailer@campus-eni.fr', 'ENI MAIL BOT'))
                 ->to((string) $user->getEmail())
-                ->subject('Test')
+                ->subject('Inscription')
                 ->htmlTemplate('email/registration-status.html.twig')
                 ->context([
                     'event' => $event,
@@ -224,7 +242,7 @@ final class EventController extends AbstractController
             $email = (new TemplatedEmail())
                 ->from(new Address('mailer@campus-eni.fr', 'ENI MAIL BOT'))
                 ->to((string) $user->getEmail())
-                ->subject('Test')
+                ->subject('Désistement')
                 ->htmlTemplate('email/registration-status.html.twig')
                 ->context([
                     'event' => $event,

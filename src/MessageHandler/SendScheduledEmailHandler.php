@@ -21,6 +21,14 @@ class SendScheduledEmailHandler
             return;
         }
 
+        $event = $scheduledEmail->getEvent();
+
+        if (!$event || (strtolower($event->getState()->getDescription()) === 'annulée')) {
+            $scheduledEmail->setStatus('cancelled');
+            $this->em->flush();
+            return;
+        }
+
         if($scheduledEmail->getSendAt() > new \DateTimeImmutable('now')) {
             return;
         }
