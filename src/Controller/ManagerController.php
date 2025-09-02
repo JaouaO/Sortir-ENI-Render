@@ -108,7 +108,7 @@ final class ManagerController extends AbstractController
         ]);
     }
 
-    #[Route('//{id}/supprimer', name: '_delete', requirements: ['id' => '\d+'])]
+    #[Route('/{id}/supprimer', name: '_delete', requirements: ['id' => '\d+'])]
     public function deleteCity(int $id, EntityManagerInterface $em): Response {
 
         $city = $em->getRepository(City::class)->find($id);
@@ -127,7 +127,7 @@ final class ManagerController extends AbstractController
 
 
 
-    // PARTIE SITES
+    // PARTIE CAMPUS
 
     #[Route('/campus', name: '_sites')]
     public function places(SiteRepository $siteRepository, Request $request): Response
