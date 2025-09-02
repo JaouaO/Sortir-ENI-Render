@@ -221,4 +221,108 @@ footer {
     background-color: #556963;
 }
 
+/* page register */
+/* Conteneur principal centré */
+.registration-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 80vh; /* prend presque toute la hauteur */
+    padding: 2rem;
+    background-color: #f9f9f9; /* fond clair */
+}
+
+/* Carte du formulaire */
+.registration-card {
+    max-width: 600px;
+    width: 100%;
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Titre */
+.registration-card h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+/* Erreurs de formulaire */
+.registration-card .alert {
+    margin-bottom: 1rem;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+/* Labels */
+.registration-card label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: bold;
+    color: #555;
+}
+
+/* Champs du formulaire */
+.registration-card input,
+.registration-card select,
+.registration-card textarea {
+    width: 100%;
+    padding: 0.6rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border 0.2s;
+}
+
+.registration-card input:focus,
+.registration-card select:focus,
+.registration-card textarea:focus {
+    border-color: #708980;
+    outline: none;
+}
+
+/* Boutons */
+.registration-card .btn {
+    display: block;
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 1rem;
+    background-color: #708980;
+    color: white;
+    border: none;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.registration-card .btn:hover {
+    background-color: #556963;
+}
+
+/* Case à cocher spécifique */
+.registration-card .form-check {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.registration-card .form-check input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 0.5rem;
+    accent-color: #708980; /* couleur de la case */
+}
+
+.registration-card .form-check label {
+    margin: 0;
+    font-weight: normal; /* on peut enlever le gras pour le texte de la checkbox */
+    color: #555;
+}
+
+
 
