@@ -144,13 +144,18 @@ final class UserController extends AbstractController
     {
         $userLogged = $this->getUser();
 
-        if ($userLogged !== $userProfile && !in_array('ROLE_ADMINISTRATEUR', $userLogged->getRoles())) {
+
+        $userLogged = $this->getUser();
+
+        if ($userLogged !== $userProfile  && !in_array('ROLE_ADMINISTRATEUR', $userLogged->getRoles())) {
             $this->addFlash('danger', 'Vous n\'avez pas accès aux modifications.');
             return $this->redirectToRoute('home');
         }
-
-        $form = $this->createForm(RegistrationFormType::class, $userProfile);
+        $form = $this->createForm(RegistrationFormType::class, $userProfile, [
+            'include_password_and_terms' => false,
+         ]);
         $form->handleRequest($request);
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             $file = $form->get('poster_file')->getData();
@@ -168,6 +173,7 @@ final class UserController extends AbstractController
                 $userProfile->setPoster($name);
             }
 
+
             $em->flush();
             $this->addFlash('success', 'Profil mis à jour !');
 
@@ -175,11 +181,12 @@ final class UserController extends AbstractController
         }
 
         return $this->render('user/edit.html.twig', [
+
             'form' => $form,
             'user' => $userProfile,
         ]);
     }
 
 
-}
 
+}

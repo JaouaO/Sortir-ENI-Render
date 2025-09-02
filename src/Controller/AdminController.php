@@ -12,6 +12,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -88,6 +89,7 @@ final class AdminController extends AbstractController
         $this->addFlash('success', "L'utilisateur {$user->getName()} a bien été supprimé.");
         return $this->redirectToRoute('admin_interface');
     }
+
     #[Route('/import', name: '_import')]
     public function import(
         Request                     $request,
