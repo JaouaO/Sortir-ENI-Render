@@ -5,14 +5,14 @@
 {% endblock %}
 
 {% block body %}
-
+    <div class="container mt-4">
     <h1>{{ group.name }}</h1>
 
     <div class="table-responsive">
         <table class="table table-striped table-hover align-middle">
             <thead>
             <tr>
-                <th scope="col">Avatar</th>
+                <th scope="col">Photo</th>
                 <th scope="col">Pseudo</th>
                 <th scope="col">Prénom</th>
                 <th scope="col">Nom</th>
@@ -48,6 +48,7 @@
             {% endfor %}
             </tbody>
         </table>
+    </div>
     </div>
 
 {% endblock %}

@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Event;
 use App\Entity\Group;
+use App\Form\EventType;
 use App\Form\GroupType;
 use App\Repository\GroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -64,7 +66,7 @@ final class GroupController extends AbstractController
     public function detail(Group $group): Response
     {
         return $this->render('group/detail.html.twig', [
-            "group" => $group
+            "group" => $group,
         ]);
     }
 
