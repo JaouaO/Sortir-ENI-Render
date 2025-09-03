@@ -133,6 +133,56 @@ final class UserController extends AbstractController
         ]);
     }
 
+    #[Route('/create-profil', name: '_create')]
+    #[IsGranted('ROLE_ADMINISTRATEUR')]
+    public function createUser(
+        Request                $request,
+        EntityManagerInterface $em,
+        FileUploader           $fileUploader,
+        ParameterbagInterface  $parameterBag,
+        UserPasswordHasherInterface $passwordHasher,
+    ): Response
+    {
+        $userProfile = new User();
+
+        $form = $this->createForm(RegistrationFormType::class, $userProfile);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $plainPassword = $form->get('plainPassword')->getData();
+            $hashedPassword = $passwordHasher->hashPassword($userProfile, $plainPassword);
+            $userProfile->setPassword($hashedPassword);
+
+            $file = $form->get('poster_file')->getData();
+            if ($file instanceof UploadedFile) {
+                $dir = $parameterBag->get('photo')['photo_profile'];
+                $name = $fileUploader->upload(
+                    $file,
+                    $userProfile->getPseudo(),
+                    $dir
+                );
+
+                // Pas besoin de supprimer l'ancien fichier pour une création
+                $userProfile->setPoster($name);
+            }
+
+            $em->persist($userProfile);
+            $em->flush();
+
+            $this->addFlash('success', 'Utilisateur ' . $userProfile->getPseudo() . ' a été créé avec succès !');
+
+            return $this->redirectToRoute('user_create');
+        }
+
+        return $this->render('user/edit.html.twig', [
+            'form' => $form->createView(),
+            'user' => $userProfile,
+            'mode' => 'create',
+        ]);
+    }
+
+
     #[Route('/profile/{id}/edit', name: '_edit', requirements: ['id' => '\d+'])]
     public function edit(
         Request                $request,
@@ -140,8 +190,6 @@ final class UserController extends AbstractController
         FileUploader           $fileUploader,
         ParameterbagInterface  $parameterBag,
         User                   $userProfile,
-        AdminController        $admin,
-
     ): Response
     {
 
@@ -165,10 +213,10 @@ final class UserController extends AbstractController
                         $userProfile->getPseudo(),
                         $dir
                     );
-                    if ($user->getPoster() && file_exists($dir . '/' . $user->getPoster())) {
-                        unlink($dir . '/' . $user->getPoster());
+                    if ($userProfile->getPoster() && file_exists($dir . '/' . $userProfile->getPoster())) {
+                        unlink($dir . '/' . $userProfile->getPoster());
                     }
-                    $user->setPoster($name);
+                    $userProfile->setPoster($name);
                 }
 
                 $em->flush();
@@ -180,8 +228,12 @@ final class UserController extends AbstractController
             return $this->render('user/edit.html.twig', [
                 'form' => $form->createView(),
                 'user' => $userProfile,
+                'mode' => 'edit',
             ]);
-        }
+    }
+
+
+
 
 
 }

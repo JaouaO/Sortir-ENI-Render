@@ -3,7 +3,11 @@
 {% block title %}Profil{% endblock %}
 
 {% block body %}
+    {% if mode == 'edit' %}
     <h1>Modification du profil de {{ user.pseudo }}</h1>
+    {% elseif mode == 'create' %}
+    <h1>Créer un nouveau profil</h1>
+    {% endif %}
 <div class="row-justify-content-center">
     {{ form_start(form) }}
 
@@ -23,10 +27,16 @@
     {% endif %}
     <br>
     <br>
-    {% if user.id %}
-    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
-    {% endif %}
-</div>
 
+    {% if mode == 'edit' %}
+        {% if user.id %}
+            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+        {% endif %}
+    {% elseif mode == 'create' %}
+        <button type="submit" class="btn btn-primary">Créer l'utilisateur</button>
+    {% endif %}
+
+</div>
+    {{ form_rest(form) }}
     {{ form_end(form, { 'render_rest': false }) }}
 {% endblock %}
