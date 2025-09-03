@@ -145,7 +145,9 @@ final class UserController extends AbstractController
     {
         $userProfile = new User();
 
-        $form = $this->createForm(RegistrationFormType::class, $userProfile);
+        $form = $this->createForm(RegistrationFormType::class, $userProfile, [
+            'include_password_and_terms' => true,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -192,8 +194,6 @@ final class UserController extends AbstractController
         User                   $userProfile,
     ): Response
     {
-        $userLogged = $this->getUser();
-
 
         $userLogged = $this->getUser();
 
@@ -223,7 +223,7 @@ final class UserController extends AbstractController
                 $userProfile->setPoster($name);
             }
 
-        $em->flush();
+            $em->flush();
             $this->addFlash('success', 'Profil mis à jour !');
 
             return $this->redirectToRoute('user_profile', ['id' => $userProfile->getId()]);
