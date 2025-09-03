@@ -13,7 +13,7 @@ class UserImportType extends AbstractType
     {
         $builder->add('csvFile', FileType::class, [
             'label' => 'Fichier CSV',
-            'mapped' => false, // Ici le champ n’est pas relié à l’entité User
+            'mapped' => false,
             'required' => true,
             'constraints' => [
                 new File([

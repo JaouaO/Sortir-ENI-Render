@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['email'], message: 'Il ya dèjà un compte associé à cette adresse email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -23,6 +23,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\NotBlank(message: 'L\'email est obligatoire')]
     private ?string $email = null;
 
     /**
@@ -41,15 +42,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isVerified = false;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'Le nom est obligatoire')]
     private ?string $name = null;
 
     #[ORM\Column(unique: true)]
+    #[Assert\NotBlank(message: 'Veuillez mettre un pseudo')]
     private ?string $pseudo = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'Le prénom est obligatoire')]
     private ?string $firstName = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'Le format doit être 0102010201')]
+    #[Assert\Regex('/^(0|\+33|0033)[1-9][0-9]{8}$/')]
     private ?string $phone = null;
 
     #[ORM\Column]
