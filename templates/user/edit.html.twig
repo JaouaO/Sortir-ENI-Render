@@ -10,7 +10,7 @@
     <h1>Créer un nouveau profil</h1>
     {% endif %}
 <div class="row-justify-content-center">
-    {{ form_start(form) }}
+    {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
 
     {{ form_row(form.pseudo, {label: 'Pseudo' }) }}
     {{ form_row(form.firstName, {label: 'Prénom' }) }}
@@ -39,6 +39,6 @@
 
 </div>
     {{ form_rest(form) }}
-    {{ form_end(form, { 'render_rest': false }) }}
+    {{ form_end(form) }}
 
 {% endblock %}
