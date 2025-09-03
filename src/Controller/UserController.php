@@ -133,6 +133,58 @@ final class UserController extends AbstractController
         ]);
     }
 
+    #[Route('/create-profil', name: '_create')]
+    #[IsGranted('ROLE_ADMINISTRATEUR')]
+    public function createUser(
+        Request                $request,
+        EntityManagerInterface $em,
+        FileUploader           $fileUploader,
+        ParameterbagInterface  $parameterBag,
+        UserPasswordHasherInterface $passwordHasher,
+    ): Response
+    {
+        $userProfile = new User();
+
+        $form = $this->createForm(RegistrationFormType::class, $userProfile, [
+            'include_password_and_terms' => true,
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $plainPassword = $form->get('plainPassword')->getData();
+            $hashedPassword = $passwordHasher->hashPassword($userProfile, $plainPassword);
+            $userProfile->setPassword($hashedPassword);
+
+            $file = $form->get('poster_file')->getData();
+            if ($file instanceof UploadedFile) {
+                $dir = $parameterBag->get('photo')['photo_profile'];
+                $name = $fileUploader->upload(
+                    $file,
+                    $userProfile->getPseudo(),
+                    $dir
+                );
+
+                // Pas besoin de supprimer l'ancien fichier pour une création
+                $userProfile->setPoster($name);
+            }
+
+            $em->persist($userProfile);
+            $em->flush();
+
+            $this->addFlash('success', 'Utilisateur ' . $userProfile->getPseudo() . ' a été créé avec succès !');
+
+            return $this->redirectToRoute('user_create');
+        }
+
+        return $this->render('user/edit.html.twig', [
+            'form' => $form->createView(),
+            'user' => $userProfile,
+            'mode' => 'create',
+        ]);
+    }
+
+
     #[Route('/profile/{id}/edit', name: '_edit', requirements: ['id' => '\d+'])]
     public function edit(
         Request                $request,
@@ -142,8 +194,6 @@ final class UserController extends AbstractController
         User                   $userProfile,
     ): Response
     {
-        $userLogged = $this->getUser();
-
 
         $userLogged = $this->getUser();
 
@@ -151,11 +201,11 @@ final class UserController extends AbstractController
             $this->addFlash('danger', 'Vous n\'avez pas accès aux modifications.');
             return $this->redirectToRoute('home');
         }
+
         $form = $this->createForm(RegistrationFormType::class, $userProfile, [
             'include_password_and_terms' => false,
          ]);
         $form->handleRequest($request);
-
 
         if ($form->isSubmitted() && $form->isValid()) {
             $file = $form->get('poster_file')->getData();
@@ -173,20 +223,16 @@ final class UserController extends AbstractController
                 $userProfile->setPoster($name);
             }
 
-
             $em->flush();
             $this->addFlash('success', 'Profil mis à jour !');
 
             return $this->redirectToRoute('user_profile', ['id' => $userProfile->getId()]);
         }
-
-        return $this->render('user/edit.html.twig', [
-
-            'form' => $form,
-            'user' => $userProfile,
-        ]);
+            return $this->render('user/edit.html.twig', [
+                'form' => $form->createView(),
+                'user' => $userProfile,
+                'mode' => 'edit',
+            ]);
     }
-
-
 
 }

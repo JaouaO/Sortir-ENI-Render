@@ -3,11 +3,17 @@
 {% block title %}Profil{% endblock %}
 
 {% block body %}
+
     <div class="profile-container">
         <div class="profile-card">
-            <h1>Modification du profil de {{ user.pseudo }}</h1>
 
-            {{ form_start(form) }}
+            {% if mode == 'edit' %}
+                <h1>Modification du profil de {{ user.pseudo }}</h1>
+            {% elseif mode == 'create' %}
+                <h1>Créer un nouveau profil</h1>
+            {% endif %}
+
+            {{ form_start(form, {'attr': {'data-turbo': 'false'}}) }}
 
             {{ form_row(form.pseudo, {label: 'Pseudo' }) }}
             {{ form_row(form.firstName, {label: 'Prénom' }) }}
@@ -15,20 +21,24 @@
             {{ form_row(form.phone, {label: 'Téléphone' }) }}
             {{ form_row(form.email, {label: 'Email' }) }}
             {{ form_row(form.site, {label: 'Ville de rattachement' }) }}
-            {{ form_row(form.poster_file, {label: 'Modifier ma photo' }) }}
 
-            {% if user.poster %}
-                <div class="profile-image">
+            <div class="profile-image">
+                {{ form_row(form.poster_file, {label: 'Modifier ma photo' }) }}
+
+                {% if user.poster %}
                     <img src="{{ asset('uploads/profile/' ~ user.poster) }}" alt="Photo de {{ user.pseudo }}">
-                </div>
-            {% endif %}
+                {% endif %}
+            </div>
 
-            {% if user.id %}
+            {% if mode == 'edit' and user.id %}
                 <button type="submit" class="btn-edit">Enregistrer les modifications</button>
+            {% elseif mode == 'create' %}
+                <button type="submit" class="btn-edit">Créer l'utilisateur</button>
             {% endif %}
-            {{ form_rest(form) }}
 
-            {{ form_end(form, { 'render_rest': false }) }}
+            {{ form_end(form) }}
+
         </div>
     </div>
+
 {% endblock %}
