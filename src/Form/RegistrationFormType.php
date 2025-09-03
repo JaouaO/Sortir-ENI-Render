@@ -21,6 +21,7 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+
             ->add('pseudo')
             ->add('name')
             ->add('firstName')
@@ -32,33 +33,6 @@ class RegistrationFormType extends AbstractType
                 'placeholder' => '-- Choisissez un site --',
                 'required' => false,
             ])
-
-            ->add('agreeTerms', CheckboxType::class, [
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'You should agree to our terms.',
-                    ]),
-                ],
-            ])
-            ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
-                'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password'],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter a password',
-                    ]),
-                    new Length([
-                        'min' => 4,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
-                        'max' => 4096,
-                    ]),
-                ],
-            ])
-
             ->add('poster_file', FileType::class, [
                 'required' => false,
                 'mapped' => false,
@@ -78,6 +52,34 @@ class RegistrationFormType extends AbstractType
                 ]
             ])
         ;
+        if($options['include_password_and_terms'] ?? false) {
+            $builder
+                ->add('agreeTerms', CheckboxType::class, [
+                    'mapped' => false,
+                    'constraints' => [
+                        new IsTrue([
+                            'message' => 'You should agree to our terms.',
+                        ]),
+                    ],
+                ])
+                ->add('plainPassword', PasswordType::class, [
+                    // instead of being set onto the object directly,
+                    // this is read and encoded in the controller
+                    'mapped' => false,
+                    'attr' => ['autocomplete' => 'new-password'],
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => 'Please enter a password',
+                        ]),
+                        new Length([
+                            'min' => 4,
+                            'minMessage' => 'Your password should be at least {{ limit }} characters',
+                            // max length allowed by Symfony for security reasons
+                            'max' => 4096,
+                        ]),
+                    ]
+                ]);
+        }
 
 
     }
@@ -86,6 +88,7 @@ class RegistrationFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'include_password_and_terms' => true,
         ]);
     }
 }

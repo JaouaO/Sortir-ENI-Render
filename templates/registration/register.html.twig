@@ -6,30 +6,34 @@
     {% for flash_error in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
+    <div class="registration-container">
+        <div class="registration-card">
+            <h1>Inscription</h1>
 
-    <h1>Inscription</h1>
+            {% for flash_error in app.flashes('verify_email_error') %}
+                <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+            {% endfor %}
 
-    {{ form_errors(registrationForm) }}
+            {{ form_start(registrationForm) }}
 
-    {{ form_start(registrationForm) }}
+            {{ form_row(registrationForm.pseudo, {label: 'Pseudo' }) }}
+            {{ form_row(registrationForm.firstName, {label: 'Prénom' }) }}
+            {{ form_row(registrationForm.name, {label: 'Nom' }) }}
+            {{ form_row(registrationForm.phone, {label: 'Téléphone' }) }}
+            {{ form_row(registrationForm.email, {label: 'Email' }) }}
+            {{ form_row(registrationForm.plainPassword, {label: 'Mot de passe' }) }}
+            {{ form_row(registrationForm.site, {label: 'Ville de rattachement' }) }}
+            <div class="form-check">
+                {{ form_row(registrationForm.agreeTerms, {label: 'Accepter les conditions d\'utilisation'}) }}
+            </div>
+            {{ form_row(registrationForm.poster_file, {label: 'Ma photo' }) }}
 
-        {{ form_row(registrationForm.pseudo, {label: 'Pseudo' }) }}
-        {{ form_row(registrationForm.firstName, {label: 'Prénom' }) }}
-        {{ form_row(registrationForm.name, {label: 'Nom' }) }}
-        {{ form_row(registrationForm.phone, {label: 'Téléphone' }) }}
-        {{ form_row(registrationForm.email, {label: 'email' }) }}
-        {{ form_row(registrationForm.plainPassword, {label: 'Mot de passe' }) }}
-        {{ form_row(registrationForm.site, {label: 'Ville de rattachement' }) }}
+            <button type="submit" class="btn">Enregistrer</button>
+            <button type="submit" class="btn">Annuler</button>
 
-        {{ form_row(registrationForm.agreeTerms, {label: 'Accepter les conditions d\'utilisations' }) }}
-        {{ form_row(registrationForm.poster_file, {label: 'Ma photo' }) }}
+            {{ form_end(registrationForm) }}
+        </div>
+    </div>
 
-
-        <button type="submit" class="btn">Enregistrer</button>
-        <button type="submit" class="btn">Annuler</button>
-
-
-
-    {{ form_end(registrationForm) }}
 
 {% endblock %}

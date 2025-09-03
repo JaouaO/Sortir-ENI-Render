@@ -192,39 +192,42 @@ final class UserController extends AbstractController
         User                   $userProfile,
     ): Response
     {
+        $userLogged = $this->getUser();
 
-            $userLogged = $this->getUser();
+
+        $userLogged = $this->getUser();
 
         if ($userLogged !== $userProfile  && !in_array('ROLE_ADMINISTRATEUR', $userLogged->getRoles())) {
             $this->addFlash('danger', 'Vous n\'avez pas accès aux modifications.');
             return $this->redirectToRoute('home');
         }
-            $form = $this->createForm(RegistrationFormType::class, $userProfile);
-            $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
+        $form = $this->createForm(RegistrationFormType::class, $userProfile, [
+            'include_password_and_terms' => false,
+         ]);
+        $form->handleRequest($request);
 
-                $file = $form->get('poster_file')->getData();
-                if ($file instanceof UploadedFile) {
+        if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('poster_file')->getData();
+            if ($file instanceof UploadedFile) {
 
-                    $dir = $parameterBag->get('photo')['photo_profile'];
-                    $name = $fileUploader->upload(
-                        $file,
-                        $userProfile->getPseudo(),
-                        $dir
-                    );
-                    if ($userProfile->getPoster() && file_exists($dir . '/' . $userProfile->getPoster())) {
-                        unlink($dir . '/' . $userProfile->getPoster());
-                    }
-                    $userProfile->setPoster($name);
+                $dir = $parameterBag->get('photo')['photo_profile'];
+                $name = $fileUploader->upload(
+                    $file,
+                    $userProfile->getPseudo(),
+                    $dir
+                );
+                if ($userProfile->getPoster() && file_exists($dir . '/' . $userProfile->getPoster())) {
+                    unlink($dir . '/' . $userProfile->getPoster());
                 }
-
-                $em->flush();
-                $this->addFlash('success', 'Profil mis à jour !');
-
-                return $this->redirectToRoute('user_edit', ['id' => $userProfile->getId()]);
+                $userProfile->setPoster($name);
             }
 
+        $em->flush();
+            $this->addFlash('success', 'Profil mis à jour !');
+
+            return $this->redirectToRoute('user_profile', ['id' => $userProfile->getId()]);
+        }
             return $this->render('user/edit.html.twig', [
                 'form' => $form->createView(),
                 'user' => $userProfile,
@@ -232,9 +235,4 @@ final class UserController extends AbstractController
             ]);
     }
 
-
-
-
-
 }
-

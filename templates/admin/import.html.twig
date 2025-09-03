@@ -1,16 +1,52 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Importer des utilisateurs{% endblock %}
+
 {% block body %}
-    <h1>Importer des utilisateurs</h1>
+    <div class="profile-container">
+        <div class="profile-card">
+            <h1>Importer des utilisateurs</h1>
 
-    {{ form_start(form) }}
-    {{ form_row(form.csvFile) }}
-    <button class="btn btn-primary">Importer</button>
-    {{ form_end(form) }}
+            {{ form_start(form, { attr: { 'data-turbo': 'false' } }) }}
+            <div class="form-group">
+                {{ form_row(form.csvFile) }}
+            </div>
 
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="alert alert-success mt-3">{{ message }}</div>
-        {% endfor %}
-    {% endfor %}
+            <div class="buttonAndText">
+                <button type="submit" name="preview" class="btn-edit">Prévisualiser</button>
+                <button type="submit" name="import" class="btn-edit">Importer</button>
+            </div>
+            {{ form_end(form) }}
+
+            {% if previewUsers is defined and previewUsers is not empty %}
+                <h2 class="mt-4">Prévisualisation</h2>
+                <div class="participants-table">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            {% for key in previewUsers[0]|keys %}
+                                <th>{{ key }}</th>
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for row in previewUsers %}
+                            <tr>
+                                {% for value in row %}
+                                    <td>{{ value }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-success mt-3">{{ message }}</div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

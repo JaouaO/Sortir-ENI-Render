@@ -3,6 +3,7 @@
 {% block title %}Profil{% endblock %}
 
 {% block body %}
+
     {% if mode == 'edit' %}
     <h1>Modification du profil de {{ user.pseudo }}</h1>
     {% elseif mode == 'create' %}
@@ -39,4 +40,5 @@
 </div>
     {{ form_rest(form) }}
     {{ form_end(form, { 'render_rest': false }) }}
+
 {% endblock %}
