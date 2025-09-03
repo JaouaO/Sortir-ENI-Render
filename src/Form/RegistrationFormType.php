@@ -79,17 +79,10 @@ class RegistrationFormType extends AbstractType
                 ]
             ])
         ;
-        if($options['include_password_and_terms'] ?? false) {
+        if ($options['include_password_and_terms'] ?? false) {
             $builder
-                ->add('agreeTerms', CheckboxType::class, [
-                    'mapped' => false,
-                    'constraints' => [
-                        new IsTrue([
-                            'message' => 'You should agree to our terms.',
-                        ]),
-                    ],
-                ])
                 ->add('plainPassword', PasswordType::class, [
+                    'label' => 'Mot de passe',
                     'required' => false,
                     'mapped' => false,
                     'attr' => ['autocomplete' => 'new-password'],
@@ -100,12 +93,22 @@ class RegistrationFormType extends AbstractType
                         new Length([
                             'min' => 4,
                             'minMessage' => 'Your password should be at least {{ limit }} characters',
-                            // max length allowed by Symfony for security reasons
+                            // max length allowed by Symfony for sécurité
                             'max' => 4096,
                         ]),
                     ]
+                ])
+                ->add('agreeTerms', CheckboxType::class, [
+                    'label' => 'J\'accepte les termes et conditions',
+                    'mapped' => false,
+                    'constraints' => [
+                        new IsTrue([
+                            'message' => 'Veuillez accepter les conditions.',
+                        ]),
+                    ],
                 ]);
         }
+
 
 
     }
