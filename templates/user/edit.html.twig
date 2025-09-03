@@ -3,32 +3,42 @@
 {% block title %}Profil{% endblock %}
 
 {% block body %}
-    <div class="profile-container">
-        <div class="profile-card">
-            <h1>Modification du profil de {{ user.pseudo }}</h1>
 
-            {{ form_start(form) }}
+    {% if mode == 'edit' %}
+    <h1>Modification du profil de {{ user.pseudo }}</h1>
+    {% elseif mode == 'create' %}
+    <h1>Créer un nouveau profil</h1>
+    {% endif %}
+<div class="row-justify-content-center">
+    {{ form_start(form) }}
 
-            {{ form_row(form.pseudo, {label: 'Pseudo' }) }}
-            {{ form_row(form.firstName, {label: 'Prénom' }) }}
-            {{ form_row(form.name, {label: 'Nom' }) }}
-            {{ form_row(form.phone, {label: 'Téléphone' }) }}
-            {{ form_row(form.email, {label: 'Email' }) }}
-            {{ form_row(form.site, {label: 'Ville de rattachement' }) }}
-            {{ form_row(form.poster_file, {label: 'Modifier ma photo' }) }}
+    {{ form_row(form.pseudo, {label: 'Pseudo' }) }}
+    {{ form_row(form.firstName, {label: 'Prénom' }) }}
+    {{ form_row(form.name, {label: 'Nom' }) }}
+    {{ form_row(form.phone, {label: 'Téléphone' }) }}
+    {{ form_row(form.email, {label: 'Email' }) }}
 
-            {% if user.poster %}
-                <div class="profile-image">
-                    <img src="{{ asset('uploads/profile/' ~ user.poster) }}" alt="Photo de {{ user.pseudo }}">
-                </div>
-            {% endif %}
+    {{ form_row(form.site, {label: 'Ville de rattachement' }) }}
 
-            {% if user.id %}
-                <button type="submit" class="btn-edit">Enregistrer les modifications</button>
-            {% endif %}
-            {{ form_rest(form) }}
+    {{ form_row(form.poster_file, {label: 'Modifier ma photo' }) }}
 
-            {{ form_end(form, { 'render_rest': false }) }}
-        </div>
-    </div>
+
+    {% if user.poster %}
+        <img src="{{ asset('uploads/profile/' ~ user.poster) }}" alt="Photo de {{ user.pseudo }}" width="150">
+    {% endif %}
+    <br>
+    <br>
+
+    {% if mode == 'edit' %}
+        {% if user.id %}
+            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+        {% endif %}
+    {% elseif mode == 'create' %}
+        <button type="submit" class="btn btn-primary">Créer l'utilisateur</button>
+    {% endif %}
+
+</div>
+    {{ form_rest(form) }}
+    {{ form_end(form, { 'render_rest': false }) }}
+
 {% endblock %}
