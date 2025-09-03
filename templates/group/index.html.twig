@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ parent() }} | Liste des groupes
+{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-4">
+        <h1>Liste de vos groupes privés</h1>
+
+        <div class="mb-3">
+            <a href="{{ path('group_edit') }}" class="btn btn-primary">
+                Créer un groupe
+            </a>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr><th>Nom du groupe</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                {% for group in groups %}
+                    <tr>
+                        <td>{{ group.name }}</td>
+                        <td>
+                            <a href="{{ path('group_detail', {id: group.id}) }}" class="btn btn-info btn-sm">Voir</a>
+                            <a href="{{ path('group_edit', {id: group.id}) }}" class="btn btn-secondary btn-sm">Modifier</a>
+                            <a href="{{ path('group_delete', {'id': group.id}) }}" class="btn btn-sm btn-warning"
+                               onclick="return confirm('Etes-vous sûr de vouloir supprimer ce groupe ?')">
+                                Supprimer
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="2" class="text-center">Aucun groupe trouvé.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+{% endblock %}
