@@ -2,68 +2,50 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Welcome World ! La dream team du fond 2 est présente{% endblock %}</title>
+    <title>{% block title %}Welcome World !{% endblock %}</title>
     <link rel="icon" href="{{ asset('images/ENI.svg') }}">
 
     {% block stylesheets %}
+        {# Bootstrap CSS via assets #}
         <link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap/dist/css/bootstrap.min.css') }}">
+        {# Ton CSS custom #}
         <link rel="stylesheet" href="{{ asset('assets/styles/app.css') }}">
     {% endblock %}
 
     {% block javascripts %}
-        {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {# Importmap gère Stimulus/Turbo #}
+        {{ importmap('app') }}
+        {# Bootstrap JS #}
         <script src="{{ asset('assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}" defer></script>
     {% endblock %}
-
-
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
     <div class="container">
         <a class="navbar-brand" href="{{ path('home') }}">
-            <span class="sortir-logo"><i class="bi bi-geo-alt-fill"></i> Sortir.com</span>
+            <span class="sortir-logo">Sortir.com</span>
         </a>
         <div class="navbar-collapse">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('home') }}">Accueil</a>
-                </li>
+                <li class="nav-item"><a class="nav-link" href="{{ path('home') }}">Accueil</a></li>
                 {% if is_granted('ROLE_ADMINISTRATEUR') %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('admin_administration') }}">Interface Administrateur</a>
-                    </li>
-
+                    <li class="nav-item"><a class="nav-link" href="{{ path('admin_administration') }}">Interface Admin</a></li>
                 {% endif %}
-
                 {% if is_granted('ROLE_ORGANISATEUR') %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('event_create') }}">Créer une sortie</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{{ path('event_create') }}">Créer une sortie</a></li>
                 {% endif %}
-
                 {% if is_granted('IS_AUTHENTICATED') %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('user_profile',{'id': app.user.id}) }}"> Mon profil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('groups',{'id': app.user.id}) }}"> Mes groupes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('user_logout') }}">Déconnexion</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{{ path('user_profile', {'id': app.user.id}) }}">Mon profil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ path('groups', {'id': app.user.id}) }}">Mes groupes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ path('user_logout') }}">Déconnexion</a></li>
                 {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('user_register') }}"> Inscription</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('user_login') }}">Connexion</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{{ path('user_register') }}">Inscription</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ path('user_login') }}">Connexion</a></li>
                 {% endif %}
             </ul>
         </div>
     </div>
 </nav>
-
 
 {% for type, messages in app.flashes %}
     {% for message in messages %}
@@ -76,13 +58,9 @@
 <div class="page-container">
     <div class="content">
         {% block body %}{% endblock %}
-
-
-        <div class="footer-container">
+        <div class="footer-container mt-3">
             <button class="btn-edit" onclick="history.back()">⬅ Retour</button>
-            <footer>
-                &copy; Sortir-ENI {{ "now"|date("Y") }}
-            </footer>
+            <footer>&copy; Sortir-ENI {{ "now"|date("Y") }}</footer>
         </div>
     </div>
 </div>
