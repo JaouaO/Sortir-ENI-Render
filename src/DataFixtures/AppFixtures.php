@@ -49,7 +49,7 @@ class AppFixtures extends Fixture
 $places=[];
         for ($i = 0; $i < 10; $i++) {
             $place = new Place();
-            $place->setName($faker->realText());
+            $place->setName($faker->streetName);
             $place->setStreet($faker->streetAddress());
             $place->setLatitude($faker->latitude());
             $place->setLongitude($faker->longitude());

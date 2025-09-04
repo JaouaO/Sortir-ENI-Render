@@ -6,10 +6,13 @@
     <link rel="icon" href="{{ asset('images/ENI.svg') }}">
 
     {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap/dist/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/styles/app.css') }}">
     {% endblock %}
 
     {% block javascripts %}
         {% block importmap %}{{ importmap('app') }}{% endblock %}
+        <script src="{{ asset('assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}" defer></script>
     {% endblock %}
 
 
