@@ -6,34 +6,42 @@
     {% for flash_error in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
+
     <div class="registration-container">
         <div class="registration-card">
             <h1>Inscription</h1>
 
-            {% for flash_error in app.flashes('verify_email_error') %}
-                <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-            {% endfor %}
-
             {{ form_start(registrationForm) }}
 
-            {{ form_row(registrationForm.pseudo, {label: 'Pseudo' }) }}
-            {{ form_row(registrationForm.firstName, {label: 'Prénom' }) }}
-            {{ form_row(registrationForm.name, {label: 'Nom' }) }}
-            {{ form_row(registrationForm.phone, {label: 'Téléphone' }) }}
-            {{ form_row(registrationForm.email, {label: 'Email' }) }}
-            {{ form_row(registrationForm.plainPassword, {label: 'Mot de passe' }) }}
-            {{ form_row(registrationForm.site, {label: 'Ville de rattachement' }) }}
-            <div class="form-check">
-                {{ form_row(registrationForm.agreeTerms, {label: 'Accepter les conditions d\'utilisation'}) }}
-            </div>
-            {{ form_row(registrationForm.poster_file, {label: 'Ma photo' }) }}
+            {# Champs obligatoires #}
+            {{ form_row(registrationForm.pseudo, {label: 'Pseudo'}) }}
+            {{ form_row(registrationForm.firstName, {label: 'Prénom'}) }}
+            {{ form_row(registrationForm.name, {label: 'Nom'}) }}
+            {{ form_row(registrationForm.phone, {label: 'Téléphone'}) }}
+            {{ form_row(registrationForm.email, {label: 'Email'}) }}
 
-            <button type="submit" class="btn">Enregistrer</button>
-            <button type="submit" class="btn">Annuler</button>
+            {# Mot de passe + confirmation #}
+            {{ form_row(registrationForm.plainPassword.first, {label: 'Mot de passe'}) }}
+            {{ form_row(registrationForm.plainPassword.second, {label: 'Confirmez le mot de passe'}) }}
+
+            {# Site et photo #}
+            {{ form_row(registrationForm.site, {label: 'Ville de rattachement'}) }}
+            {{ form_row(registrationForm.poster_file, {label: 'Ma photo'}) }}
+
+            {# Case à cocher conditions #}
+            <div class="form-check">
+                {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
+                {{ form_label(registrationForm.agreeTerms, "Accepter les conditions d'utilisation", {'label_attr': {'class': 'form-check-label'}}) }}
+                {{ form_errors(registrationForm.agreeTerms) }}
+            </div>
+
+            {# Boutons côte à côte #}
+            <div class="btn-group">
+                <button type="submit" class="btn">Enregistrer</button>
+                <button type="reset" class="btn">Annuler</button>
+            </div>
 
             {{ form_end(registrationForm) }}
         </div>
     </div>
-
-
 {% endblock %}

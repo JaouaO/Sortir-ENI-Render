@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,42 +18,53 @@ use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-
-            ->add('pseudo',TextType::class, [
-                'required' => false,
-                'attr' => [
-                    'placeholder' => 'Le pseudo'
-                ]
+            ->add('pseudo', TextType::class, [
+                'required' => true,
+                'attr' => ['placeholder' => 'Pseudo'],
+                'constraints' => [
+                    new NotBlank(['message' => 'Le pseudo est obligatoire.'])
+                ],
+            ])
+            ->add('firstName', TextType::class, [
+                'required' => true,
+                'attr' => ['placeholder' => 'Prénom'],
+                'constraints' => [
+                    new NotBlank(['message' => 'Le prénom est obligatoire.'])
+                ],
             ])
             ->add('name', TextType::class, [
-                'required' => false,
-                'attr' => [
-                    'placeholder' => 'Doe'
-                ]
-            ])
-            ->add('firstName',TextType::class, [
-                'required' => false,
-                'attr' => [
-                    'placeholder' => 'John'
-                ]
+                'required' => true,
+                'attr' => ['placeholder' => 'Nom'],
+                'constraints' => [
+                    new NotBlank(['message' => 'Le nom est obligatoire.'])
+                ],
             ])
             ->add('phone', TelType::class, [
-                'required' => false,
-                'attr' => [
-                    'placeholder' => '0102020202'
-                ]
+                'required' => true,
+                'attr' => ['placeholder' => '0102020202'],
+                'constraints' => [
+                    new NotBlank(['message' => 'Le téléphone est obligatoire.']),
+                    new Regex([
+                        'pattern' => '/^\d{10}$/',
+                        'message' => 'Le numéro de téléphone doit contenir 10 chiffres.',
+                    ]),
+                ],
             ])
-            ->add('email',TextType::class, [
-                'required' => false,
-                'attr' => [
-                    'placeholder' => 'johndoe@gmail.com'
-                ]
+            ->add('email', TextType::class, [
+                'required' => true,
+                'attr' => ['placeholder' => 'email@example.com'],
+                'constraints' => [
+                    new NotBlank(['message' => 'L\'email est obligatoire.']),
+                    new Email(['message' => 'Entrez un email valide.'])
+                ],
             ])
             ->add('site', EntityType::class, [
                 'class' => Site::class,
@@ -66,51 +78,40 @@ class RegistrationFormType extends AbstractType
                 'constraints' => [
                     new File([
                         'maxSize' => '1024k',
-                        'maxSizeMessage' => 'votre fichier est trop lourd',
-                        'mimeTypes' => [
-                            'image/jpeg',
-                            'image/png',
-                            'image/gif',
-                            'image/bmp',
-                            'image/jpg'
-                        ],
-                        'mimeTypesMessage' => 'Les formats accéptés sont jpeg,png,gif.',
+                        'maxSizeMessage' => 'Votre fichier est trop lourd.',
+                        'mimeTypes' => ['image/jpeg','image/png','image/gif','image/bmp','image/jpg'],
+                        'mimeTypesMessage' => 'Les formats acceptés sont jpeg, png, gif, bmp.',
                     ])
-                ]
-            ])
-        ;
+                ],
+            ]);
+
         if ($options['include_password_and_terms'] ?? false) {
             $builder
-                ->add('plainPassword', PasswordType::class, [
-                    'label' => 'Mot de passe',
-                    'required' => false,
+                ->add('plainPassword', RepeatedType::class, [
+                    'type' => PasswordType::class,
                     'mapped' => false,
-                    'attr' => ['autocomplete' => 'new-password'],
+                    'invalid_message' => 'Les mots de passe doivent correspondre.',
+                    'options' => ['attr' => ['autocomplete' => 'new-password']],
+                    'required' => true,
+                    'first_options'  => ['label' => 'Mot de passe'],
+                    'second_options' => ['label' => 'Confirmez le mot de passe'],
                     'constraints' => [
-                        new NotBlank([
-                            'message' => 'Entrez un mot de passe ',
-                        ]),
+                        new NotBlank(['message' => 'Entrez un mot de passe']),
                         new Length([
                             'min' => 4,
-                            'minMessage' => 'Your password should be at least {{ limit }} characters',
-                            // max length allowed by Symfony for sécurité
+                            'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
                             'max' => 4096,
                         ]),
-                    ]
+                    ],
                 ])
                 ->add('agreeTerms', CheckboxType::class, [
-                    'label' => 'J\'accepte les termes et conditions',
+                    'label' => 'J\'accepte les termes',
                     'mapped' => false,
                     'constraints' => [
-                        new IsTrue([
-                            'message' => 'Veuillez accepter les conditions.',
-                        ]),
+                        new IsTrue(['message' => 'Veuillez accepter les conditions.']),
                     ],
                 ]);
         }
-
-
-
     }
 
     public function configureOptions(OptionsResolver $resolver): void

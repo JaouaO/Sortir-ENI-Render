@@ -1,57 +1,20 @@
+/* ========================== */
+/* Global */
 body {
     margin: 0;
-
 }
 
 .custom-navbar {
     background-color: #708980;
 }
 
-.event-info dt {
-    font-weight: bold;
-}
-.event-info dd {
-    margin-bottom: 10px;
-}
-.participants-table {
-    max-width: 500px;
-    max-height: 250px;
-    overflow-y: auto;
-    thead th {
-        position: sticky;
-        top: 0;
-        background: white;
-        z-index: 2;
-    }
-}
 .navbar-brand {
     font-weight: bold;
     font-size: 1.5rem;
-
 }
+
 .sortir-logo {
     color: white;
-}
-
-form .form-group label {
-    font-weight: 500;
-}
-
-.card-body {
-    display: flex;
-    align-items: flex-end;
-    text-align: center;
-
-    justify-content: space-between;
-}
-
-.buttonAndText {
-    display: flex;
-    gap : 20px;
-}
-
-.buttonAndText h5 p {
-    margin: 0;
 }
 
 footer {
@@ -65,71 +28,52 @@ footer {
     background-color: #708980;
 }
 
-                                /* CSS Profil */
-/* Conteneur principal centré */
-.profile-container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 80vh; /* prend presque toute la hauteur */
-    padding: 2rem;
-    background-color: #f9f9f9; /* fond clair */
+.event-info dt {
+    font-weight: bold;
+}
+.event-info dd {
+    margin-bottom: 10px;
 }
 
-/* Carte profil */
-.profile-card {
-    max-width: 600px;
-    width: 100%;
+/* Table participants */
+.participants-table {
+    max-width: 500px;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.participants-table thead th {
+    position: sticky;
+    top: 0;
     background: white;
-    padding: 1rem;
-    /*border-radius: 12px;*/
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    text-align: center;
+    z-index: 2;
 }
 
-/* Titre */
-.profile-card h1 {
-    margin-bottom: 1.5rem;
-    color: #333;
+/* ========================== */
+/* Formulaire commun (profil + inscription) */
+input, select, textarea {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border 0.2s;
 }
 
-/* Texte */
-.profile-card p {
-    margin: 0.5rem 0;
-    font-size: 1.1rem;
+input:focus, select:focus, textarea:focus {
+    border-color: #708980;
+    outline: none;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: bold;
     color: #555;
 }
 
-/* Image */
-.profile-image img {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin: 1rem 0;
-    border: 3px solid #708980; /* rappel de ta couleur */
-}
-
-/* Bouton */
-.btn-edit {
-    display: inline-block;
-    margin-top: 1rem;
-    padding: 0.7rem 1.5rem;
-    background-color: #708980;
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 8px;
-    transition: background 0.3s;
-}
-
-.btn-edit:hover {
-    background-color: #556963;
-}
-
-
-/* CSS edit profil */
-/* Conteneur principal centré */
+/* ========================== */
+/* Profil & édition */
 .profile-container {
     display: flex;
     justify-content: center;
@@ -139,7 +83,6 @@ footer {
     background-color: #f9f9f9;
 }
 
-/* Carte */
 .profile-card {
     max-width: 600px;
     width: 100%;
@@ -147,48 +90,19 @@ footer {
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: center;
 }
 
-/* Titre */
 .profile-card h1 {
-    text-align: center;
     margin-bottom: 1.5rem;
     color: #333;
+    text-align: center;
 }
 
-/* Champs du formulaire */
 .profile-card form div {
     margin-bottom: 1rem;
 }
 
-/* Labels */
-.profile-card label {
-    display: block;
-    margin-bottom: 0.3rem;
-    font-weight: bold;
-    color: #555;
-}
-
-/* Inputs */
-.profile-card input,
-.profile-card select,
-.profile-card textarea {
-    width: 100%;
-    padding: 0.6rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: border 0.2s;
-}
-
-.profile-card input:focus,
-.profile-card select:focus,
-.profile-card textarea:focus {
-    border-color: #708980;
-    outline: none;
-}
-
-/* Image */
 .profile-image {
     text-align: center;
     margin: 1rem 0;
@@ -202,7 +116,6 @@ footer {
     border: 3px solid #708980;
 }
 
-/* Bouton */
 .btn-edit {
     display: block;
     width: 100%;
@@ -221,18 +134,17 @@ footer {
     background-color: #556963;
 }
 
-/* page register */
-/* Conteneur principal centré */
+/* ========================== */
+/* Inscription */
 .registration-container {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    min-height: 80vh; /* prend presque toute la hauteur */
+    min-height: 80vh;
     padding: 2rem;
-    background-color: #f9f9f9; /* fond clair */
+    background-color: #f9f9f9;
 }
 
-/* Carte du formulaire */
 .registration-card {
     max-width: 600px;
     width: 100%;
@@ -242,14 +154,12 @@ footer {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* Titre */
 .registration-card h1 {
     text-align: center;
     margin-bottom: 1.5rem;
     color: #333;
 }
 
-/* Erreurs de formulaire */
 .registration-card .alert {
     margin-bottom: 1rem;
     padding: 0.8rem 1rem;
@@ -257,35 +167,6 @@ footer {
     font-weight: 500;
 }
 
-/* Labels */
-.registration-card label {
-    display: block;
-    margin-bottom: 0.3rem;
-    font-weight: bold;
-    color: #555;
-}
-
-/* Champs du formulaire */
-.registration-card input,
-.registration-card select,
-.registration-card textarea {
-    width: 100%;
-    padding: 0.6rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: border 0.2s;
-}
-
-.registration-card input:focus,
-.registration-card select:focus,
-.registration-card textarea:focus {
-    border-color: #708980;
-    outline: none;
-}
-
-/* Boutons */
 .registration-card .btn {
     display: block;
     width: 100%;
@@ -304,22 +185,45 @@ footer {
     background-color: #556963;
 }
 
-/* Case à cocher spécifique */
-.registration-card .form-check {
+/* Case à cocher */
+.form-check {
     display: flex;
     align-items: center;
+    gap: 0.5rem;
     margin-bottom: 1rem;
 }
 
-.registration-card .form-check input[type="checkbox"] {
+.form-check input[type="checkbox"] {
     width: 20px;
     height: 20px;
-    margin-right: 0.5rem;
-    accent-color: #708980; /* couleur de la case */
+    accent-color: #708980;
+    cursor: pointer;
 }
 
-.registration-card .form-check label {
+.form-check label {
     margin: 0;
-    font-weight: normal; /* on peut enlever le gras pour le texte de la checkbox */
+    font-weight: normal;
     color: #555;
+    cursor: pointer;
+}
+
+/* Boutons côte à côte */
+.registration-card .btn-group {
+    display: flex;
+    gap: 10px;
+}
+
+.registration-card .btn-group .btn {
+    flex: 1;
+}
+
+/* Flex pour boutons dans les cartes profil */
+.card-body, .buttonAndText {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.buttonAndText h5 p {
+    margin: 0;
 }
