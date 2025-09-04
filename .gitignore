@@ -21,5 +21,6 @@
 .env
 .env.dev
 .env.test
-.migrations
+migrations/
+
 public/uploads/
