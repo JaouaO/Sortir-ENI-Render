@@ -100,16 +100,16 @@
             <div class="buttonAndText mt-3">
                 {% if app.user %}
                     {% if state == 'Annulée' %}
-                        <button class="btn-edit" disabled>Sortie annulée</button>
+                        <button class="btn btn-danger" disabled>Sortie annulée</button>
                     {% elseif event.registeredParticipants.contains(app.user) %}
-                        <button class="btn-edit" disabled>Déjà inscrit</button>
+                        <button class="btn btn-danger" disabled>Déjà inscrit</button>
                         <form method="post" action="{{ path('event_unregister', {id: event.id}) }}">
-                            <button class="btn-edit">Se désinscrire</button>
+                            <button class="btn btn-danger">Se désinscrire</button>
                         </form>
                     {% elseif event.registeredParticipants|length >= event.maxParticipants %}
-                        <button class="btn-edit" disabled>Complet</button>
+                        <button class="btn btn-danger" disabled>Complet</button>
                     {% elseif event.registrationDeadline < date('now') %}
-                        <button class="btn-edit" disabled>Date d'inscription dépassée</button>
+                        <button class="btn btn-danger" disabled>Date d'inscription dépassée</button>
                     {% elseif state == 'Ouverte' %}
                         <form method="post" action="{{ path('event_register', {id: event.id}) }}">
                             <button type="submit" class="btn-edit">S'inscrire</button>
@@ -120,7 +120,7 @@
 
                     {% if (is_granted('ROLE_ORGANISATEUR') and app.user == event.organizer or is_granted('ROLE_ADMINISTRATEUR')) and state != 'Annulée' %}
                         <a href="{{ path('event_cancel', {id: event.id}) }}" class="d-inline">
-                            <button class="btn-edit">Annuler la sortie</button>
+                            <button class="btn btn-danger">Annuler la sortie</button>
                         </a>
                     {% endif %}
                 {% else %}
