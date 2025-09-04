@@ -17,16 +17,72 @@ body {
     color: white;
 }
 
-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+.page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* prend tout l’écran */
+}
+
+.content {
+    flex: 1; /* pousse le footer vers le bas si contenu court */
+    padding: 2rem;
+}
+
+.footer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 1rem 0;
+}
+/* footer avec bouton "Retour" */
+.footer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 1rem 0;
+}
+
+.btn-back {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    background-color: #0d6efd;
     color: white;
-    padding: 10px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-back:hover {
+    background-color: #0b5ed7;
+}
+
+footer {
+    width: 100%;
     text-align: center;
     background-color: #708980;
+    color: white;
+    padding: 10px 0;
+    border-radius: 4px;
 }
+
+/* Responsive */
+@media (max-width: 600px) {
+    .btn-back {
+        width: 90%;
+    }
+
+    footer {
+        font-size: 0.85rem;
+    }
+}
+
 
 .event-info dt {
     font-weight: bold;
@@ -37,9 +93,10 @@ footer {
 
 /* Table participants */
 .participants-table {
-    max-width: 500px;
-    max-height: 250px;
-    overflow-y: auto;
+    width: 100%;      /* prend toute la largeur de la card */
+    max-width: none;  /* supprime la limite à 500px */
+    max-height: none; /* supprime la limite à 250px */
+    overflow: auto;   /* garde le scroll si nécessaire */
 }
 
 .participants-table thead th {
