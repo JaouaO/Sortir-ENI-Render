@@ -7,9 +7,361 @@
 
     {% block stylesheets %}
         {# Bootstrap CSS via assets #}
-        <link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap/dist/css/bootstrap.min.css') }}">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* ========================== */
+        /* Global */
+        body {
+            margin: 0;
+        }
+
+        .custom-navbar {
+            background-color: #708980;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .sortir-logo {
+            color: white;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        .page-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* prend tout l’écran */
+        }
+
+        .content {
+            flex: 1; /* pousse le footer vers le bas si contenu court */
+            padding: 2rem;
+        }
+
+        .footer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 1rem 0;
+        }
+        /* footer avec bouton "Retour" */
+        .footer-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 1rem 0;
+        }
+
+        .btn-back {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background-color: #0d6efd;
+            color: white;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-back:hover {
+            background-color: #0b5ed7;
+        }
+
+        footer {
+            width: 100%;
+            text-align: center;
+            background-color: #708980;
+            color: white;
+            padding: 10px 0;
+            border-radius: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .btn-back {
+                width: 90%;
+            }
+
+            footer {
+                font-size: 0.85rem;
+            }
+        }
+
+
+        .event-info dt {
+            font-weight: bold;
+        }
+        .event-info dd {
+            margin-bottom: 10px;
+        }
+
+        /* Table participants */
+        .participants-table {
+            width: 100%;      /* prend toute la largeur de la card */
+            max-width: none;  /* supprime la limite à 500px */
+            max-height: none; /* supprime la limite à 250px */
+            overflow: auto;   /* garde le scroll si nécessaire */
+        }
+
+        .participants-table thead th {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 2;
+        }
+
+        /* ========================== */
+        /* Formulaire commun (profil + inscription) */
+        input, select, textarea {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #708980;
+            outline: none;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: bold;
+            color: #555;
+        }
+
+        /* ========================== */
+        /* Profil & édition */
+        .profile-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 80vh;
+            padding: 2rem;
+            background-color: #f9f9f9;
+        }
+
+        .profile-card {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .profile-card h1 {
+            margin-bottom: 1.5rem;
+            color: #333;
+            text-align: center;
+        }
+
+        .profile-card form div {
+            margin-bottom: 1rem;
+        }
+
+        .profile-image {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .profile-image img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #708980;
+        }
+
+        .btn-edit {
+            display: block;
+            width: 100%;
+            padding: 0.8rem;
+            margin-top: 1rem;
+            background-color: #708980;
+            color: white;
+            border: none;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-edit:hover {
+            background-color: #556963;
+        }
+
+        /* ========================== */
+        /* Inscription */
+        .registration-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 80vh;
+            padding: 2rem;
+            background-color: #f9f9f9;
+        }
+
+        .registration-card {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .registration-card h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        .registration-card .alert {
+            margin-bottom: 1rem;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .registration-card .btn {
+            display: block;
+            width: 100%;
+            padding: 0.8rem;
+            margin-top: 1rem;
+            background-color: #708980;
+            color: white;
+            border: none;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .registration-card .btn:hover {
+            background-color: #556963;
+        }
+
+        /* Case à cocher */
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-check input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #708980;
+            cursor: pointer;
+        }
+
+        .form-check label {
+            margin: 0;
+            font-weight: normal;
+            color: #555;
+            cursor: pointer;
+        }
+
+        /* Boutons côte à côte */
+        .registration-card .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .registration-card .btn-group .btn {
+            flex: 1;
+        }
+
+        /* Flex pour boutons dans les cartes profil */
+        .card-body, .buttonAndText {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .buttonAndText h5 p {
+            margin: 0;
+        }
+
+        /********************************/
+        /* Page Annuler*/
+        /********************************/
+        /* Container principal */
+        .cancel-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 80vh;
+            padding: 2rem;
+            background-color: #f9f9f9;
+        }
+        /* Carte principale */
+        .cancel-card {
+            max-width: 700px;   /* un peu plus large */
+            width: 100%;
+            background: white;
+            padding: 2rem 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: left;   /* tout aligné à gauche */
+        }
+        /* Titre */
+        .cancel-card h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+        /* Bloc d'infos */
+        .cancel-info dl {
+            margin: 0;
+        }
+        .cancel-info dt {
+            font-weight: bold;
+            color: #444;
+        }
+        .cancel-info dd {
+            margin-bottom: 1rem;
+            margin-left: 0;
+            color: #555;
+        }
+        /* Bloc motif */
+        .cancel-reason {
+            margin-top: 2rem;
+        }
+        .cancel-reason label {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        /* Boutons */
+        .cancel-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .cancel-buttons .btn {
+            flex: 1; /* même taille pour tous */
+            font-weight: bold;
+            padding: 0.8rem;
+        }
+
+    </style>
         {# Ton CSS custom #}
-        <link rel="stylesheet" href="{{ asset('assets/styles/app.css') }}">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     {% endblock %}
 
     {% block javascripts %}
