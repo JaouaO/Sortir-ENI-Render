@@ -19,13 +19,13 @@ final class MainController extends AbstractController
     private EntityManagerInterface $em;
     private EventService $eventService;
 
-    public function __construct(EventRepository $eventRepository, EventService $eventService, EntityManagerInterface $em)
+    public function __construct(EventRepository $eventRepository, EventService $eventService,
+                                EntityManagerInterface $em)
     {
         $this->eventRepository = $eventRepository;
         $this->eventService = $eventService;
         $this->em = $em;
     }
-
 
     #[Route(['/', '/accueil'], name: 'home')]
     public function index(Request $request): Response
@@ -50,7 +50,6 @@ final class MainController extends AbstractController
         //call requests in Event Repo
         $events = $this->eventRepository->queryFilters($filters);
 
-
         foreach ($events as $event) {
 
             //get id of the event
@@ -58,7 +57,7 @@ final class MainController extends AbstractController
             //count nb of participants :
             $nbRegisteredByEvent [$eventId] = $event->getRegisteredParticipants()->count();
 
-            //check user is event participant "inscrit"
+            //check user is event participant
             if ($event->getRegisteredParticipants()->contains($user)){
                 $isUserEventRegistered[$eventId] = true;
             } else {
@@ -70,7 +69,6 @@ final class MainController extends AbstractController
             $this->em->persist($event);
             $this->em->flush();
         }
-
 
         return $this->render('main/index.html.twig', [
             'user' => $user,

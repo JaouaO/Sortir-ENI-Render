@@ -323,3 +323,65 @@ footer {
     font-weight: normal; /* on peut enlever le gras pour le texte de la checkbox */
     color: #555;
 }
+
+/********************************/
+/* Page Annuler*/
+/********************************/
+/* Container principal */
+.cancel-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 80vh;
+    padding: 2rem;
+    background-color: #f9f9f9;
+}
+/* Carte principale */
+.cancel-card {
+    max-width: 700px;   /* un peu plus large */
+    width: 100%;
+    background: white;
+    padding: 2rem 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    text-align: left;   /* tout aligné à gauche */
+}
+/* Titre */
+.cancel-card h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+/* Bloc d'infos */
+.cancel-info dl {
+    margin: 0;
+}
+.cancel-info dt {
+    font-weight: bold;
+    color: #444;
+}
+.cancel-info dd {
+    margin-bottom: 1rem;
+    margin-left: 0;
+    color: #555;
+}
+/* Bloc motif */
+.cancel-reason {
+    margin-top: 2rem;
+}
+.cancel-reason label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+/* Boutons */
+.cancel-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+.cancel-buttons .btn {
+    flex: 1; /* même taille pour tous */
+    font-weight: bold;
+    padding: 0.8rem;
+}
