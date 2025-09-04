@@ -1,0 +1,27 @@
+{
+  "name": "sortir-eni",
+  "version": "1.0.0",
+  "description": "Jaoua, Christophe, Eric, Pierre",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JaouaO/Sortir-ENI-Render.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JaouaO/Sortir-ENI-Render/issues"
+  },
+  "homepage": "https://github.com/JaouaO/Sortir-ENI-Render#readme",
+  "dependencies": {
+    "bootstrap": "^5.3.8",
+    "sass": "^1.92.0"
+  }
+}
