@@ -56,6 +56,9 @@
                         <a class="nav-link" href="{{ path('user_profile',{'id': app.user.id}) }}"> Mon profil</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ path('groups',{'id': app.user.id}) }}"> Mes groupes</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ path('user_logout') }}">Déconnexion</a>
                     </li>
                 {% else %}

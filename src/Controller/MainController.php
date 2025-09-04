@@ -36,6 +36,8 @@ final class MainController extends AbstractController
             $user= new  User();
         }
 
+        $today = new \DateTimeImmutable();
+
         $nbRegisteredByEvent = [];
         $isUserEventRegistered = [];
 
@@ -62,6 +64,11 @@ final class MainController extends AbstractController
             } else {
                 $isUserEventRegistered[$eventId] = false;
             }
+
+            $state = $this->eventService->determinestate($event, $nbRegisteredByEvent, $eventId, $today);
+            $event->setState($state);
+            $this->em->persist($event);
+            $this->em->flush();
         }
 
 

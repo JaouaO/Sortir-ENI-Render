@@ -66,6 +66,9 @@ class Event
     #[ORM\OneToMany(targetEntity: ScheduledEmail::class, mappedBy: 'event')]
     private Collection $scheduledEmails;
 
+    #[ORM\ManyToOne(inversedBy: 'events')]
+    private ?Group $privateGroup = null;
+
     public function __construct()
     {
         $this->registeredParticipants = new ArrayCollection();
@@ -296,6 +299,18 @@ class Event
                 $scheduledEmail->setEvent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPrivateGroup(): ?Group
+    {
+        return $this->privateGroup;
+    }
+
+    public function setPrivateGroup(?Group $privateGroup): static
+    {
+        $this->privateGroup = $privateGroup;
 
         return $this;
     }

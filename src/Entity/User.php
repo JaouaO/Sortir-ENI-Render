@@ -86,10 +86,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank(message: 'Choissisez une ville')]
     private ?Site $site = null;
 
+    /**
+     * @var Collection<int, Group>
+     */
+    #[ORM\ManyToMany(targetEntity: Group::class, mappedBy: 'Users')]
+    private Collection $userGroup;
+
     public function __construct()
     {
         $this->registeredEvents = new ArrayCollection();
         $this->organizedEvents = new ArrayCollection();
+        $this->userGroup = new ArrayCollection();
     }
 
 
@@ -316,6 +323,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPoster(?string $poster): self
     {
         $this->poster = $poster;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Group>
+     */
+    public function getUserGroup(): Collection
+    {
+        return $this->userGroup;
+    }
+
+    public function addUserGroup(Group $userGroup): static
+    {
+        if (!$this->userGroup->contains($userGroup)) {
+            $this->userGroup->add($userGroup);
+            $userGroup->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserGroup(Group $userGroup): static
+    {
+        if ($this->userGroup->removeElement($userGroup)) {
+            $userGroup->removeUser($this);
+        }
+
         return $this;
     }
 
