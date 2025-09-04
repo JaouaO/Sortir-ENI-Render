@@ -87,24 +87,6 @@ class EventService {
             $stateEntity = $stateRepository->findOneBy(['description' => 'Ouverte']);
         }
 
-//        if ($event->getState() === 6) {
-//            $stateEntity = $stateRepository->findOneBy(['description' => 'Annulée']);
-//        } else if ($endDate < $today) {
-//            // Past events
-//            $stateEntity = $stateRepository->findOneBy(['description' => 'Passée']);
-//        } elseif ($startDate <= $today && $endDate >= $today) {
-//            // Ongoing events
-//            $stateEntity = $stateRepository->findOneBy(['description' => 'Activité en cours']);
-//        } elseif ($startDate > $today && $nbRegisteredByEvent[$eventId] >= $maxParticipants) {
-//            // closed registrations on coming events
-//            $stateEntity = $stateRepository->findOneBy(['description' => 'Clôturée']);
-//        } else {
-//            // Open registrations on coming events
-//            $stateEntity = $stateRepository->findOneBy(['description' => 'Ouverte']);
-//        }
-
-
-
         return $stateEntity;
 
     }
