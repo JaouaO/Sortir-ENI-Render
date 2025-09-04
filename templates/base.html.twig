@@ -27,21 +27,8 @@
                 </li>
                 {% if is_granted('ROLE_ADMINISTRATEUR') %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('admin_interface') }}">Interface Administrateur</a>
+                        <a class="nav-link" href="{{ path('admin_administration') }}">Interface Administrateur</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('manager_cities') }}">Gérer les villes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('manager_sites') }}">Gérer les campus</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('admin_import') }}">Importer des utilisateurs via CSV</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('user_create') }}">Créer un utilisateur</a>
-                    </li>
-
 
                 {% endif %}
 
