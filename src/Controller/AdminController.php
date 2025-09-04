@@ -31,6 +31,14 @@ final class AdminController extends AbstractController
         return $this->render('admin/interface.html.twig', ['events' => $events, 'users' => $users]);
     }
 
+    #[Route('/administration', name: '_administration')]
+    public function administration(EventRepository $eventRepository, UserRepository $userRepository): Response
+    {
+             return $this->render('admin/hub.html.twig');
+    }
+
+
+
     #[Route('/{id}/desactiver', name: '_desactivate')]
     public function desactivate(User $user, EntityManagerInterface $em,  MailerInterface $mailer): Response
     {
