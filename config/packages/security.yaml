@@ -52,13 +52,6 @@ security:
       - { path: ^/sortie/\d+/modifier, roles: ROLE_ORGANISATEUR }
       - { path: ^/sortie/\d+/annuler, roles: ROLE_ORGANISATEUR }
 
-
-      # --- Routes publiques
-      - { path: ^/utilisateur/profile, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-      - { path: ^/utilisateur/connexion, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-      - { path: ^/utilisateur/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-      - { path: ^/reset-password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-
 when@test:
     security:
         password_hashers:
