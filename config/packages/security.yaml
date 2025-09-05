@@ -45,7 +45,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
       # --- Routes Admin (seulement ROLE_ADMIN)
-      - { path: ^/administration, roles: ROLE_ADMIN }
+      - { path: ^/administration, roles: ROLE_ADMINISTRATEUR }
 
       # --- Routes de gestion des événements (créateurs et admins)
       - { path: ^/sortie/creer, roles: ROLE_ORGANISATEUR }
