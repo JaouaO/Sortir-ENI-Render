@@ -61,7 +61,9 @@ final class UserController extends AbstractController
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, ParameterBagInterface $parameterBag, FileUploader $fileUploader): Response
     {
         $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form = $this->createForm(RegistrationFormType::class, $user, [
+            'use_captcha' => true,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -98,8 +100,7 @@ final class UserController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
-            'mode' => 'register',
-            'use_captcha' => true,
+            'mode' => 'register'
         ]);
     }
 
@@ -135,10 +136,10 @@ final class UserController extends AbstractController
     #[Route('/create-profil', name: '_create')]
     #[IsGranted('ROLE_ADMINISTRATEUR')]
     public function createUser(
-        Request                $request,
-        EntityManagerInterface $em,
-        FileUploader           $fileUploader,
-        ParameterbagInterface  $parameterBag,
+        Request                     $request,
+        EntityManagerInterface      $em,
+        FileUploader                $fileUploader,
+        ParameterbagInterface       $parameterBag,
         UserPasswordHasherInterface $passwordHasher,
     ): Response
     {
@@ -196,14 +197,14 @@ final class UserController extends AbstractController
 
         $userLogged = $this->getUser();
 
-        if ($userLogged !== $userProfile  && !in_array('ROLE_ADMINISTRATEUR', $userLogged->getRoles())) {
+        if ($userLogged !== $userProfile && !in_array('ROLE_ADMINISTRATEUR', $userLogged->getRoles())) {
             $this->addFlash('danger', 'Vous n\'avez pas accès aux modifications.');
             return $this->redirectToRoute('home');
         }
 
         $form = $this->createForm(RegistrationFormType::class, $userProfile, [
             'include_password_and_terms' => false,
-         ]);
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -227,11 +228,11 @@ final class UserController extends AbstractController
 
             return $this->redirectToRoute('user_profile', ['id' => $userProfile->getId()]);
         }
-            return $this->render('user/edit.html.twig', [
-                'form' => $form->createView(),
-                'user' => $userProfile,
-                'mode' => 'edit',
-            ]);
+        return $this->render('user/edit.html.twig', [
+            'form' => $form->createView(),
+            'user' => $userProfile,
+            'mode' => 'edit',
+        ]);
     }
 
 }
