@@ -1,5 +1,5 @@
 karser_recaptcha3:
-    site_key: '%env(6LeUIL8rAAAAAJU9Hf9e3srdPP_nE6umJmz-6smD)%'
-    secret_key: '%env(6LeUIL8rAAAAAEcz5IzqeYIf9OH2tVR77vN94iNQ)%'
+    site_key: '%env(YOUR_SITE_KEY)%'
+    secret_key: '%env(YOUR_SECRET_KEY)%'
     score_threshold: 0.5
     enabled: true
