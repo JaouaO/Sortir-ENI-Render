@@ -43,9 +43,21 @@ security:
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
-   # access_control:
-    #     - { path: ^/admin, roles: ROLE_ADMINISTRATEUR }
-        # - { path: ^/profile, roles: ROLE_USER }
+    access_control:
+      # --- Routes Admin (seulement ROLE_ADMIN)
+      - { path: ^/administration, roles: ROLE_ADMIN }
+
+      # --- Routes de gestion des événements (créateurs et admins)
+      - { path: ^/sortie/creer, roles: ROLE_ORGANISATEUR }
+      - { path: ^/sortie/\d+/modifier, roles: ROLE_ORGANISATEUR }
+      - { path: ^/sortie/\d+/annuler, roles: ROLE_ORGANISATEUR }
+
+
+      # --- Routes publiques
+      - { path: ^/utilisateur/profile, roles: ROLE_USER }
+      - { path: ^/utilisateur/connexion, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+      - { path: ^/utilisateur/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+      - { path: ^/reset-password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
 when@test:
     security:
