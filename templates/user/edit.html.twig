@@ -48,9 +48,11 @@
 
             {# Bouton submit #}
             {% if mode == 'edit' and user.id %}
-                <button type="submit" class="btn-edit w-100">Enregistrer les modifications</button>
+                <button type="submit" class="btn-edit">Enregistrer les modifications</button>
             {% elseif mode == 'create' %}
-                <button type="submit" class="btn-edit w-100">Créer l'utilisateur</button>
+                <button type="submit" class="btn-edit">Créer l'utilisateur</button>
+                {% else %}
+                    <button type="submit" class="btn-edit">Enregistrer</button>
             {% endif %}
 
             {{ form_end(form) }}
