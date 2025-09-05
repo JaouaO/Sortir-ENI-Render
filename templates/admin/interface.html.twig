@@ -2,13 +2,46 @@
 
 {% block title %}Hello Admin{% endblock %}
 
-{% block body %}
+{% block stylesheets %}
+    <style>
+        .page-admin table th,
+        .page-admin table td {
+            vertical-align: middle;
+        }
 
-    <div class="container mt-5">
+        .page-admin table td.actions-cell {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+        }
+
+        .page-admin table td.actions-cell a.btn {
+            flex: 1; /* optionnel : tous les boutons même largeur */
+            white-space: nowrap;
+        }
+
+        /* largeur fixe pour la colonne # */
+        .page-admin table th.index-col,
+        .page-admin table td.index-col {
+            width: 40px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .page-admin table td.actions-cell {
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="page-admin container mt-5">
         <h1 class="mb-4">Administration</h1>
 
         <div class="row g-4">
-
+            <!-- Utilisateurs -->
             <div class="col-12 col-lg-6">
                 <div class="card shadow-sm">
                     <div class="card-header bg-primary text-white">
@@ -18,7 +51,7 @@
                         <table id="usersTable" class="table table-striped mb-0">
                             <thead class="table-light">
                             <tr>
-                                <th onclick="sortTable(0,'usersTable')"># 🔽</th>
+                                <th class="index-col" onclick="sortTable(0,'usersTable')"># 🔽</th>
                                 <th onclick="sortTable(1,'usersTable')">Nom 🔽</th>
                                 <th onclick="sortTable(2,'usersTable')">Email 🔽</th>
                                 <th>Actions</th>
@@ -27,46 +60,45 @@
                             <tbody>
                             {% for user in users %}
                                 <tr>
-                                    <td>{{ loop.index }}</td>
-                                    <td><a
-                                                {% if user.isAdmin %}
-                                                    class="link-danger link-underline-opacity-0"
-                                                {% else %}
-                                                    class="link-body-emphasis link-underline-opacity-0"
-                                                {% endif %}
+                                    <td class="index-col">{{ loop.index }}</td>
+                                    <td>
+                                        <a {% if user.isAdmin %}
+                                            class="link-danger link-underline-opacity-0"
+                                        {% else %}
+                                            class="link-body-emphasis link-underline-opacity-0"
+                                        {% endif %}
                                                 href="{{ path('user_profile', {id: user.id}) }}">
                                             {{ user.name }}
                                         </a>
                                     </td>
-                                    <td><a
-                                                {% if user.isAdmin %}
-                                                    class="link-danger link-underline-opacity-0"
-                                                {% else %}
-                                                    class="link-body-emphasis link-underline-opacity-0"
-                                                {% endif %}
+                                    <td>
+                                        <a {% if user.isAdmin %}
+                                            class="link-danger link-underline-opacity-0"
+                                        {% else %}
+                                            class="link-body-emphasis link-underline-opacity-0"
+                                        {% endif %}
                                                 href="{{ path('user_profile', {id: user.id}) }}">
                                             {{ user.email }}
                                         </a>
                                     </td>
-                                    <td>
-                                        {% if user.isAdmin==false %}
+                                    <td class="actions-cell">
+                                        {% if not user.isAdmin %}
                                             {% if user.isActive %}
-                                            <a href="{{ path('admin_desactivate', {id: user.id}) }}"
-                                               class="btn btn-sm btn-warning"
-                                               onclick="return confirm('Etes vous sûr de vouloir rendre cet utilisateur inactif?')">
-                                                Rendre inactif
-                                            </a>
-                                                {% else %}
-                                                    <a href="{{ path('admin_reactivate', {id: user.id}) }}"
-                                                       class="btn btn-sm btn-outline-secondary"
-                                                       onclick="return confirm('Etes vous sûr de vouloir réactiver cet utilisateur?')">
-                                                       Réactiver
-                                                    </a>
-                                                    {% endif %}
+                                                <a href="{{ path('admin_desactivate', {id: user.id}) }}"
+                                                   class="btn btn-sm btn-warning"
+                                                   onclick="return confirm('Etes vous sûr de vouloir rendre cet utilisateur inactif?')">
+                                                    Rendre inactif
+                                                </a>
+                                            {% else %}
+                                                <a href="{{ path('admin_reactivate', {id: user.id}) }}"
+                                                   class="btn btn-sm btn-outline-secondary"
+                                                   onclick="return confirm('Etes vous sûr de vouloir réactiver cet utilisateur?')">
+                                                    Réactiver
+                                                </a>
+                                            {% endif %}
                                             <a href="{{ path('admin_delete', {id: user.id}) }}"
                                                class="btn btn-sm btn-danger"
                                                onclick="return confirm('Etes vous sûr de vouloir supprimer cet utilisateur ?')">
-
                                                 Supprimer
                                             </a>
                                         {% endif %}
@@ -83,7 +115,7 @@
                 </div>
             </div>
 
-
+            <!-- Sorties -->
             <div class="col-12 col-lg-6">
                 <div class="card shadow-sm">
                     <div class="card-header bg-secondary text-white">
@@ -93,21 +125,21 @@
                         <table id="eventsTable" class="table table-striped mb-0">
                             <thead class="table-light">
                             <tr>
-                                <th onclick="sortTable(0,'eventsTable')"># 🔽</th>
+                                <th class="index-col" onclick="sortTable(0,'eventsTable')"># 🔽</th>
                                 <th onclick="sortTable(1,'eventsTable')">Sortie 🔽</th>
-                                <th onclick="sortTable(2,'eventsTable')">Date de début🔽</th>
+                                <th onclick="sortTable(2,'eventsTable')">Date de début 🔽</th>
                                 <th>Actions</th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for event in events %}
                                 <tr>
-                                    <td>{{ loop.index }}</td>
+                                    <td class="index-col">{{ loop.index }}</td>
                                     <td><a class="link-body-emphasis link-underline-opacity-0"
                                            href="{{ path('event_display',{id: event.id}) }}">
                                             {{ event.name }}</a></td>
                                     <td>{{ event.startDateTime|date('d/m/Y H:i') }}</td>
-                                    <td>
+                                    <td class="actions-cell">
                                         <a href="{{ path('event_cancel', {id: event.id}) }}"
                                            class="btn btn-sm btn-danger">
                                             Annuler la sortie
@@ -116,7 +148,7 @@
                                 </tr>
                             {% else %}
                                 <tr>
-                                    <td colspan="4" class="text-center text-muted">Aucune sortie trouvé.</td>
+                                    <td colspan="4" class="text-center text-muted">Aucune sortie trouvée.</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -126,6 +158,7 @@
             </div>
         </div>
     </div>
+
     <script>
         function sortTable(columnIndex, tableName) {
             const table = document.getElementById(tableName);

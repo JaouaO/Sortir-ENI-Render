@@ -1,21 +1,130 @@
-{% extends '/base.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Connexion{% endblock %}
 
+{% block stylesheets %}
+    <style>
+        .page-login {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 75vh;
+        }
+
+        .page-login .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .page-login h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: #333;
+        }
+
+        .page-login label {
+            font-weight: 600;
+            margin-bottom: .4rem;
+            display: block;
+            color: #444;
+        }
+
+        .page-login input[type="email"],
+        .page-login input[type="password"] {
+            width: 100%;
+            padding: .75rem 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            transition: border-color .3s;
+        }
+
+        .page-login input:focus {
+            outline: none;
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 2px rgba(13,110,253,.2);
+        }
+
+        .page-login .form-check {
+            margin: 1rem 0;
+        }
+
+        .page-login .error-message {
+            background: #f8d7da;
+            color: #842029;
+            padding: .75rem 1rem;
+            border-radius: 6px;
+            font-size: .95rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .page-login .already-connected {
+            background: #e9f7ef;
+            color: #0f5132;
+            padding: .75rem 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: .95rem;
+            text-align: center;
+        }
+
+        .page-login .forgot-password {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .page-login .forgot-password a {
+            display: inline-block;
+            padding: .6rem 1.2rem;
+            border-radius: 8px;
+            background-color: #dc3545;
+            color: #fff;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background .3s;
+        }
+
+        .page-login .forgot-password a:hover {
+            background-color: #bb2d3b;
+        }
+
+        @media (max-width: 768px) {
+            .page-login .login-card {
+                padding: 1.2rem;
+                border-radius: 8px;
+                box-shadow: none;
+            }
+
+            .page-login h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
-    <div class="profile-container">
-        <div class="profile-card">
+    <div class="page-login">
+        <div class="login-card">
             <h1>Se connecter</h1>
 
             {% if error %}
-                <div style="color:#dc3545; margin-bottom:1rem;">
+                <div class="error-message">
                     {{ error.messageKey|trans(error.messageData, 'security') }}
                 </div>
             {% endif %}
 
             {% if app.user %}
-                <div style="margin-bottom:1rem;">
-                    Vous êtes connecté(e) en tant que {{ app.user.userIdentifier }}, <a href="{{ path('user_logout') }}">Se déconnecter</a>
+                <div class="already-connected">
+                    Vous êtes connecté(e) en tant que <strong>{{ app.user.userIdentifier }}</strong>.
+                    <br>
+                    <a href="{{ path('user_logout') }}">Se déconnecter</a>
                 </div>
             {% endif %}
 
@@ -32,16 +141,16 @@
 
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                <div class="form-check" style="margin:1rem 0;">
-                    <input type="checkbox" id="_remember_me" name="_remember_me">
-                    <label for="_remember_me">Se souvenir de moi</label>
+                <div class="form-check">
+                    <input type="checkbox" id="_remember_me" name="_remember_me" class="form-check-input">
+                    <label for="_remember_me" class="form-check-label">Se souvenir de moi</label>
                 </div>
 
-                <button type="submit" class="btn-edit">Se connecter</button>
+                <button type="submit" class="btn-edit w-100">Se connecter</button>
             </form>
 
-            <div style="margin-top:1rem; text-align:center;">
-                <a href="{{ path('app_forgot_password_request') }}" class="btn-edit" style="background-color:#dc3545;">J'ai oublié mon mot de passe</a>
+            <div class="forgot-password">
+                <a href="{{ path('app_forgot_password_request') }}">J'ai oublié mon mot de passe</a>
             </div>
         </div>
     </div>
