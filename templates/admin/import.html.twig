@@ -42,6 +42,17 @@
                 </div>
             {% endif %}
 
+            {% if errors is defined and errors is not empty %}
+                <div class="alert alert-danger mt-3">
+                    <h4>Erreurs détectées dans le fichier :</h4>
+                    <ul>
+                        {% for error in errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
             {% for label, messages in app.flashes %}
                 {% for message in messages %}
                     <div class="alert alert-success mt-3">{{ message }}</div>

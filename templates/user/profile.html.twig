@@ -2,27 +2,88 @@
 
 {% block title %}Profil{% endblock %}
 
+{% block stylesheets %}
+    <style>
+        .page-profile .profile-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 70vh;
+        }
+
+        .page-profile .profile-card {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .page-profile .profile-image {
+            margin: 1.5rem 0;
+        }
+
+        .page-profile .profile-image img {
+            width: 160px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #708980;
+        }
+
+        .page-profile h1 {
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        .page-profile p {
+            margin: 0.5rem 0;
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            .page-profile .profile-card {
+                padding: 1rem;
+                box-shadow: none;
+            }
+
+            .page-profile h1 {
+                font-size: 1.5rem;
+            }
+
+            .page-profile p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
-    <div class="profile-container">
-        <div class="profile-card">
-            <h1>Profil de {{ user.pseudo }}</h1>
+    <div class="page-profile">
+        <div class="profile-container">
+            <div class="profile-card">
+                <h1>Profil de {{ user.pseudo }}</h1>
 
-            <p><strong>Prénom :</strong> {{ user.firstName }}</p>
-            <p><strong>Nom :</strong> {{ user.name }}</p>
-            <p><strong>Téléphone :</strong> {{ user.phone }}</p>
-            <p><strong>Email :</strong> {{ user.email }}</p>
-            <p><strong>Ville de rattachement :</strong> {{ user.site }}</p>
+                <p><strong>Prénom :</strong> {{ user.firstName }}</p>
+                <p><strong>Nom :</strong> {{ user.name }}</p>
+                <p><strong>Téléphone :</strong> {{ user.phone }}</p>
+                <p><strong>Email :</strong> {{ user.email }}</p>
+                <p><strong>Ville de rattachement :</strong> {{ user.site }}</p>
 
-            {% if user.poster %}
-                <div class="profile-image">
-                    <img src="{{ asset('uploads/profile/' ~ user.poster) }}"
-                         alt="Photo de {{ user.pseudo }}">
-                </div>
-            {% endif %}
+                {% if user.poster %}
+                    <div class="profile-image">
+                        <img src="{{ asset('uploads/profile/' ~ user.poster) }}"
+                             alt="Photo de {{ user.pseudo }}">
+                    </div>
+                {% endif %}
 
-            {% if is_granted('ROLE_ADMINISTRATEUR') or (app.user and app.user.id == user.id)%}
-                <a href="{{ path('user_edit',  { id: user.id })}}" class="btn-edit">Modifier</a>
-            {% endif %}
+                {% if is_granted('ROLE_ADMINISTRATEUR') or (app.user and app.user.id == user.id)%}
+                    <a href="{{ path('user_edit',  { id: user.id })}}" class="btn-edit mt-3">Modifier</a>
+                {% endif %}
+            </div>
         </div>
     </div>
 {% endblock %}

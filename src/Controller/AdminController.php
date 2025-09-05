@@ -34,13 +34,12 @@ final class AdminController extends AbstractController
     #[Route('/administration', name: '_administration')]
     public function administration(EventRepository $eventRepository, UserRepository $userRepository): Response
     {
-             return $this->render('admin/hub.html.twig');
+        return $this->render('admin/hub.html.twig');
     }
 
 
-
     #[Route('/{id}/desactiver', name: '_desactivate')]
-    public function desactivate(User $user, EntityManagerInterface $em,  MailerInterface $mailer): Response
+    public function desactivate(User $user, EntityManagerInterface $em, MailerInterface $mailer): Response
     {
 
         $user->setIsActive(false);
@@ -52,18 +51,16 @@ final class AdminController extends AbstractController
 
         $email = (new TemplatedEmail())
             ->from(new Address('mailer@campus-eni.fr', 'ENI MAIL BOT'))
-            ->to((string) $user->getEmail())
+            ->to((string)$user->getEmail())
             ->subject('You have been deactivated')
             ->htmlTemplate('email/deactivate.html.twig')
             ->context([
                 'user' => $user,
-            ])
-          ;
+            ]);
 
         $mailer->send($email);
 
         $em->flush();
-
 
 
         $this->addFlash('success', "L'utilisateur {$user->getName()} a bien été désactivé.");
@@ -100,14 +97,17 @@ final class AdminController extends AbstractController
 
     #[Route('/import', name: '_import')]
     public function import(
-        Request $request,
-        EntityManagerInterface $em,
+        Request                     $request,
+        EntityManagerInterface      $em,
         UserPasswordHasherInterface $passwordHasher
-    ): Response {
+    ): Response
+    {
         $form = $this->createForm(UserImportType::class);
         $form->handleRequest($request);
 
         $previewUsers = [];
+        $errors = [];
+        $lineNumber = 1;
 
         if ($form->isSubmitted() && $form->isValid()) {
             $file = $form->get('csvFile')->getData();
@@ -122,18 +122,26 @@ final class AdminController extends AbstractController
                 $header = array_map('trim', str_getcsv($headerLine, ';'));
 
                 while (($data = fgetcsv($handle, 1000, ';')) !== false) {
+                    $lineNumber++;
                     $data = array_map('trim', $data);
 
                     if (empty(array_filter($data))) {
+                        $errors[] = "Ligne $lineNumber : ligne vide ignorée.";
                         continue;
                     }
-
                     if (count($data) !== count($header)) {
+                        $errors[] = "Ligne $lineNumber : nombre de colonnes incorrect.";
                         continue;
                     }
 
                     $row = array_combine($header, $data);
                     if (!$row || empty($row['email'])) {
+                        $errors[] = "Ligne $lineNumber : email manquant.";
+                        continue;
+                    }
+
+                    if (!filter_var($row['email'], FILTER_VALIDATE_EMAIL)) {
+                        $errors[] = "Ligne $lineNumber : email invalide ({$row['email']}).";
                         continue;
                     }
 
@@ -143,7 +151,7 @@ final class AdminController extends AbstractController
             }
 
             // Si clic sur "Importer"
-            if ($request->request->has('import')) {
+            if ($request->request->has('import') && empty($errors)) {
                 foreach ($previewUsers as $row) {
                     $user = new User();
                     $user->setEmail($row['email']);
@@ -152,6 +160,7 @@ final class AdminController extends AbstractController
                     $user->setFirstName($row['firstName'] ?? '');
                     $user->setPhone($row['phone'] ?? '');
                     $user->setRoles(!empty($row['roles']) ? explode(',', $row['roles']) : ['ROLE_USER']);
+
                     $password = !empty($row['password']) ? $row['password'] : '123456';
                     $hashedPassword = $passwordHasher->hashPassword($user, $password);
                     $user->setPassword($hashedPassword);
@@ -175,7 +184,9 @@ final class AdminController extends AbstractController
         return $this->render('admin/import.html.twig', [
             'form' => $form->createView(),
             'previewUsers' => $previewUsers,
+            'errors' => $errors, // on envoie les erreurs à Twig
         ]);
     }
+
 
 }

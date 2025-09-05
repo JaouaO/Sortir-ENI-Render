@@ -11,7 +11,7 @@
 
     <style>
         /* ========================== */
-        /* Desktop (par défaut) */
+        /* GLOBAL */
         body {
             margin: 0;
             font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -42,24 +42,6 @@
             padding: 2.5rem;
         }
 
-        /* Cartes (profil, inscription, annulation) */
-        .profile-card,
-        .registration-card,
-        .cancel-card {
-            max-width: 800px;
-            margin: auto;
-            padding: 2rem 2.5rem;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-        }
-
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-
         .btn-back, .btn-edit {
             padding: 0.8rem 1.8rem;
             border-radius: 8px;
@@ -69,6 +51,9 @@
             border: none;
             cursor: pointer;
             transition: background 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
         }
 
         .btn-back:hover, .btn-edit:hover {
@@ -86,7 +71,7 @@
         }
 
         /* ========================== */
-        /* Mobile / Tablette */
+        /* RESPONSIVE */
         @media (max-width: 768px) {
             .navbar-brand {
                 font-size: 1.2rem;
@@ -96,22 +81,6 @@
                 padding: 1rem;
             }
 
-            /* Cartes : pleine largeur */
-            .profile-card,
-            .registration-card,
-            .cancel-card {
-                max-width: 100%;
-                padding: 1rem;
-                border-radius: 8px;
-                box-shadow: none; /* plus simple sur mobile */
-            }
-
-            h1 {
-                font-size: 1.5rem;
-                margin-bottom: 1rem;
-            }
-
-            /* Boutons : full width */
             .btn-back, .btn-edit {
                 width: 100%;
                 padding: 0.9rem;
@@ -125,10 +94,6 @@
         }
 
         @media (max-width: 480px) {
-            h1 {
-                font-size: 1.3rem;
-            }
-
             .navbar-nav .nav-link {
                 font-size: 0.9rem;
                 padding: 0.5rem;
