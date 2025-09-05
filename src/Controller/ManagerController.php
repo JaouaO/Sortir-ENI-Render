@@ -45,8 +45,6 @@ final class ManagerController extends AbstractController
 
             if (empty($town)) {
                 $this->addFlash('error', "Le nom de la ville est obligatoire.");
-            } elseif($town != $city->getName()){
-                $this->addFlash('error', "La ville est déjà présente");
             } elseif (empty($cp)) {
                 $this->addFlash('error', "Le code postal est obligatoire.");
             } elseif (!preg_match('/^\d{5}$/', $cp)) {
@@ -83,8 +81,6 @@ final class ManagerController extends AbstractController
 
             if (empty($town)) {
                 $this->addFlash('error', "Le nom de la ville est obligatoire.");
-            } elseif($town != $city->getName()){
-                $this->addFlash('error', "La ville est déjà présente");
             } elseif (empty($cp)) {
                 $this->addFlash('error', "Le code postal est obligatoire.");
             } elseif (!preg_match('/^\d{5}$/', $cp)) {
@@ -189,8 +185,6 @@ final class ManagerController extends AbstractController
 
             if (empty($town)) {
                 $this->addFlash('error', "Le nom du campus est obligatoire.");
-            }elseif($town != $site->getName()){
-                $this->addFlash('error', "Le campus est déjà présent");
             } else {
 
                 $site->setName($town);
