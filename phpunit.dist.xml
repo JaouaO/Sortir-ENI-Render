@@ -21,6 +21,12 @@
         <!-- postgresql+advisory://db_user:db_password@localhost/db_name -->
         <env name="LOCK_DSN" value="flock"/>
         <!-- ###- symfony/lock ### -->
+
+        <!-- ###+ karser/karser-recaptcha3-bundle ### -->
+        <!-- Get your API key and secret from https://g.co/recaptcha/v3 -->
+        <env name="RECAPTCHA3_KEY" value="my_site_key"/>
+        <env name="RECAPTCHA3_SECRET" value="my_secret"/>
+        <!-- ###- karser/karser-recaptcha3-bundle ### -->
     </php>
 
     <testsuites>

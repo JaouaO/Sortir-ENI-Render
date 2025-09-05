@@ -98,7 +98,8 @@ final class UserController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
-            'mode' => 'register'
+            'mode' => 'register',
+            'use_captcha' => true,
         ]);
     }
 

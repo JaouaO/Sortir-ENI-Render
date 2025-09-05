@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\Site;
 use App\Entity\User;
+use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
+use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -79,7 +81,7 @@ class RegistrationFormType extends AbstractType
                     new File([
                         'maxSize' => '1024k',
                         'maxSizeMessage' => 'Votre fichier est trop lourd.',
-                        'mimeTypes' => ['image/jpeg','image/png','image/gif','image/bmp','image/jpg'],
+                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/jpg'],
                         'mimeTypesMessage' => 'Les formats acceptés sont jpeg, png, gif, bmp.',
                     ])
                 ],
@@ -93,7 +95,7 @@ class RegistrationFormType extends AbstractType
                     'invalid_message' => 'Les mots de passe doivent correspondre.',
                     'options' => ['attr' => ['autocomplete' => 'new-password']],
                     'required' => true,
-                    'first_options'  => ['label' => 'Mot de passe'],
+                    'first_options' => ['label' => 'Mot de passe'],
                     'second_options' => ['label' => 'Confirmez le mot de passe'],
                     'constraints' => [
                         new NotBlank(['message' => 'Entrez un mot de passe']),
@@ -111,6 +113,14 @@ class RegistrationFormType extends AbstractType
                         new IsTrue(['message' => 'Veuillez accepter les conditions.']),
                     ],
                 ]);
+            if ($options['use_captcha'] ?? false) {
+                $builder->add('recaptcha', Recaptcha3Type::class, [
+                    'constraints' => [
+                        new Recaptcha3(['message' => 'Échec du contrôle anti-bot, réessayez.'])
+                    ],
+                    'action_name' => 'register',
+                ]);
+            }
         }
     }
 
@@ -119,6 +129,7 @@ class RegistrationFormType extends AbstractType
         $resolver->setDefaults([
             'data_class' => User::class,
             'include_password_and_terms' => true,
+            'use_captcha' => false,
         ]);
     }
 }
