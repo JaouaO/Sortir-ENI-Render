@@ -6,142 +6,202 @@
     {{ parent() }}
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
+    <style>
+        /* Spécifique à la page sortie */
+        .page-event .event-info dt {
+            font-weight: bold;
+            color: #444;
+        }
 
+        .page-event .event-info dd {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        #map {
+            height: 300px;
+            width: 100%;
+            min-height: 250px;
+            border-radius: 8px;
+            z-index: 0;
+        }
+
+        .participants-table {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .buttonAndText {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .buttonAndText button,
+        .buttonAndText form,
+        .buttonAndText a {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-event h1 {
+                font-size: 1.5rem;
+            }
+
+            .buttonAndText {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .buttonAndText button,
+            .buttonAndText form,
+            .buttonAndText a {
+                width: 100%;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="page-event">
+        <div class="profile-container">
+            <div class="profile-card">
+                <h1>Page de sortie : {{ event.name }}</h1>
+
+                <!-- Infos générales -->
+                <dl class="row event-info">
+                    <dt class="col-sm-5">Nom de la sortie :</dt>
+                    <dd class="col-sm-7">{{ event.name }}</dd>
+
+                    <dt class="col-sm-5">Date et heure de début :</dt>
+                    <dd class="col-sm-7">{{ event.startDateTime|date('d/m/Y H:i') }}</dd>
+
+                    <dt class="col-sm-5">Date et heure de fin :</dt>
+                    <dd class="col-sm-7">{{ event.endDateTime|date('d/m/Y H:i') }}</dd>
+
+                    <dt class="col-sm-5">Date limite d'inscription :</dt>
+                    <dd class="col-sm-7">{{ event.registrationDeadLine|date('d/m/Y H:i') }}</dd>
+
+                    <dt class="col-sm-5">Nombre de places :</dt>
+                    <dd class="col-sm-7">{{ event.maxParticipants }}</dd>
+
+                    <dt class="col-sm-5">Description et infos :</dt>
+                    <dd class="col-sm-7">{{ event.eventInfo }}</dd>
+
+                    {% if state == 'Annulée' %}
+                        <dt class="col-sm-5">Raison de l'annulation :</dt>
+                        <dd class="col-sm-7">{{ event.cancelReason }}</dd>
+                    {% endif %}
+                </dl>
+
+                <!-- Carte -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">Localisation</h5>
+                    </div>
+                    <div class="card-body p-2">
+                        <div id="map"></div>
+                    </div>
+                </div>
+
+                <!-- Participants -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="mb-0">Participants inscrits</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive participants-table">
+                            <table class="table table-striped table-bordered mb-0">
+                                <thead>
+                                <tr>
+                                    <th>Pseudo</th>
+                                    <th>Nom</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for participant in event.registeredParticipants %}
+                                    <tr>
+                                        <td>
+                                            <a class="link-body-emphasis link-underline-opacity-0"
+                                               href="{{ path('user_profile',{'id': participant.id }) }}">
+                                                {{ participant.pseudo }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a class="link-body-emphasis link-underline-opacity-0"
+                                               href="{{ path('user_profile',{'id': participant.id }) }}">
+                                                {{ participant.name }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="2" class="text-center text-muted">
+                                            Pas de participants
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Boutons d'action -->
+                <div class="buttonAndText mt-3">
+                    {% if app.user %}
+                        {% if state == 'Annulée' %}
+                            <button class="btn btn-danger" disabled>Sortie annulée</button>
+                        {% elseif event.registeredParticipants.contains(app.user) %}
+                            <button class="btn btn-danger" disabled>Déjà inscrit</button>
+                            <form method="post" action="{{ path('event_unregister', {id: event.id}) }}">
+                                <button class="btn btn-danger">Se désinscrire</button>
+                            </form>
+                        {% elseif event.registeredParticipants|length >= event.maxParticipants %}
+                            <button class="btn btn-danger" disabled>Complet</button>
+                        {% elseif event.registrationDeadline < date('now') %}
+                            <button class="btn btn-danger" disabled>Date d'inscription dépassée</button>
+                        {% elseif state == 'Ouverte' %}
+                            <form method="post" action="{{ path('event_register', {id: event.id}) }}">
+                                <button type="submit" class="btn-edit">S'inscrire</button>
+                            </form>
+                        {% else %}
+                            <p>Une erreur est survenue</p>
+                        {% endif %}
+
+                        {% if (is_granted('ROLE_ORGANISATEUR') and app.user == event.organizer or is_granted('ROLE_ADMINISTRATEUR')) and state != 'Annulée' %}
+                            <a href="{{ path('event_cancel', {id: event.id}) }}" class="d-inline">
+                                <button class="btn btn-danger">Annuler la sortie</button>
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <a href="{{ path('user_login') }}" class="btn-edit">Connectez-vous pour vous inscrire</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-{% endblock %}
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+    <script defer>
+        document.addEventListener("DOMContentLoaded", function() {
+            const lat = {{ event.place.latitude }};
+            const lng = {{ event.place.longitude }};
+            const map = L.map('map').setView([lat, lng], 15);
 
-{% block body %}
-    <div class="profile-container">
-        <div class="profile-card">
-            <h1>Page de sortie : {{ event.name }}</h1>
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
 
-            <!-- Infos générales -->
-            <dl class="row event-info">
-                <dt class="col-sm-5">Nom de la sortie :</dt>
-                <dd class="col-sm-7">{{ event.name }}</dd>
-
-                <dt class="col-sm-5">Date et heure de début :</dt>
-                <dd class="col-sm-7">{{ event.startDateTime|date('d/m/Y H:i') }}</dd>
-
-                <dt class="col-sm-5">Date et heure de fin :</dt>
-                <dd class="col-sm-7">{{ event.endDateTime|date('d/m/Y H:i') }}</dd>
-
-                <dt class="col-sm-5">Date limite d'inscription :</dt>
-                <dd class="col-sm-7">{{ event.registrationDeadLine|date('d/m/Y H:i') }}</dd>
-
-                <dt class="col-sm-5">Nombre de places :</dt>
-                <dd class="col-sm-7">{{ event.maxParticipants }}</dd>
-
-                <dt class="col-sm-5">Description et infos :</dt>
-                <dd class="col-sm-7">{{ event.eventInfo }}</dd>
-
-                {% if state == 'Annulée' %}
-                    <dt class="col-sm-5">Raison de l'annulation :</dt>
-                    <dd class="col-sm-7">{{ event.cancelReason }}</dd>
-                {% endif %}
-            </dl>
-
-            <!-- Carte -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-info text-white">
-                    <h5 class="mb-0">Localisation</h5>
-                </div>
-                <div class="card-body p-0">
-                    <div id="map" style="height: 300px; width: 100%;"></div>
-                </div>
-            </div>
-
-            <!-- Participants -->
-            <div class="card shadow-sm">
-                <div class="card-header bg-secondary text-white">
-                    <h5 class="mb-0">Participants inscrits</h5>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive participants-table">
-                        <table class="table table-striped table-bordered mb-0">
-                            <thead>
-                            <tr>
-                                <th>Pseudo</th>
-                                <th>Nom</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for participant in event.registeredParticipants %}
-                                <tr>
-                                    <td>
-                                        <a class="link-body-emphasis link-underline-opacity-0"
-                                           href="{{ path('user_profile',{'id': participant.id }) }}">
-                                            {{ participant.pseudo }}
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a class="link-body-emphasis link-underline-opacity-0"
-                                           href="{{ path('user_profile',{'id': participant.id }) }}">
-                                            {{ participant.name }}
-                                        </a>
-                                    </td>
-                                </tr>
-                            {% else %}
-                                <tr>
-                                    <td colspan="2" class="text-center text-muted">
-                                        Pas de participants
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Boutons d'action -->
-            <div class="buttonAndText mt-3">
-                {% if app.user %}
-                    {% if state == 'Annulée' %}
-                        <button class="btn btn-danger" disabled>Sortie annulée</button>
-                    {% elseif event.registeredParticipants.contains(app.user) %}
-                        <button class="btn btn-danger" disabled>Déjà inscrit</button>
-                        <form method="post" action="{{ path('event_unregister', {id: event.id}) }}">
-                            <button class="btn btn-danger">Se désinscrire</button>
-                        </form>
-                    {% elseif event.registeredParticipants|length >= event.maxParticipants %}
-                        <button class="btn btn-danger" disabled>Complet</button>
-                    {% elseif event.registrationDeadline < date('now') %}
-                        <button class="btn btn-danger" disabled>Date d'inscription dépassée</button>
-                    {% elseif state == 'Ouverte' %}
-                        <form method="post" action="{{ path('event_register', {id: event.id}) }}">
-                            <button type="submit" class="btn-edit">S'inscrire</button>
-                        </form>
-                    {% else %}
-                        <p>Une erreur est survenue</p>
-                    {% endif %}
-
-                    {% if (is_granted('ROLE_ORGANISATEUR') and app.user == event.organizer or is_granted('ROLE_ADMINISTRATEUR')) and state != 'Annulée' %}
-                        <a href="{{ path('event_cancel', {id: event.id}) }}" class="d-inline">
-                            <button class="btn btn-danger">Annuler la sortie</button>
-                        </a>
-                    {% endif %}
-                {% else %}
-                    <a href="{{ path('user_login') }}" class="btn-edit">Connectez-vous pour vous inscrire</a>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Initialisation Leaflet simplifiée
-        const lat = {{ event.place.latitude }};
-        const lng = {{ event.place.longitude }};
-        const map = L.map('map').setView([lat, lng], 15);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
-        L.marker([lat, lng]).addTo(map)
-            .bindPopup("<strong>{{ event.place.name|escape('js') }}</strong>")
-            .openPopup();
+            L.marker([lat, lng]).addTo(map)
+                .bindPopup("<strong>{{ event.place.name|escape('js') }}</strong>")
+                .openPopup();
+        });
     </script>
 {% endblock %}
