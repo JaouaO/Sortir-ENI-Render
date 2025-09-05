@@ -2,27 +2,61 @@
 
 {% block title %}Interface Administrateur{% endblock %}
 
+{% block stylesheets %}
+    <style>
+        .admin-interface {
+            display: flex;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .admin-interface .admin-card {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem; /* espace entre les boutons */
+            width: 100%;
+            max-width: 500px;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .admin-interface .admin-card a.nav-link {
+            display: block;
+            text-align: center;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            background-color: #0d6efd;
+            transition: background 0.3s;
+        }
+
+        .admin-interface .admin-card a.nav-link:hover {
+            background-color: #0b5ed7;
+        }
+
+        @media (max-width: 768px) {
+            .admin-interface .admin-card {
+                padding: 1rem;
+            }
+            .admin-interface .admin-card a.nav-link {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
-    <div class="profile-container">
-        <div class="profile-card">
-
-            <li class="btn-edit">
-                <a class="nav-link" href="{{ path('admin_interface') }}">Gestion des Sorties et des utilisateurs</a>
-            </li>
-            <li class="btn-edit">
-                <a class="nav-link" href="{{ path('manager_cities') }}">Gérer les villes</a>
-            </li>
-            <li class="btn-edit">
-                <a class="nav-link" href="{{ path('manager_sites') }}">Gérer les campus</a>
-            </li>
-            <li class="btn-edit">
-                <a class="nav-link" href="{{ path('admin_import') }}">Importer des utilisateurs via CSV</a>
-            </li>
-            <li class="btn-edit">
-                <a class="nav-link" href="{{ path('user_create') }}">Créer un utilisateur</a>
-            </li>
-
-
+    <div class="admin-interface">
+        <div class="admin-card">
+            <a class="nav-link" href="{{ path('admin_interface') }}">Gestion des Sorties et des utilisateurs</a>
+            <a class="nav-link" href="{{ path('manager_cities') }}">Gérer les villes</a>
+            <a class="nav-link" href="{{ path('manager_sites') }}">Gérer les campus</a>
+            <a class="nav-link" href="{{ path('admin_import') }}">Importer des utilisateurs via CSV</a>
+            <a class="nav-link" href="{{ path('user_create') }}">Créer un utilisateur</a>
         </div>
     </div>
 {% endblock %}
